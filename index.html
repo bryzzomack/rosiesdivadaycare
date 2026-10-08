@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rosie's Diva Daycare</title>
+<meta name="theme-color" content="#ff4f9a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Dog-sit Rosie, the most spoiled diva on the porch. Feed her, walk her, rub her tummy, and keep her from texting Dad.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%91%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#3a1846; --ink2:#6e4f7c; --cream:#fffaf6; --pink:#ff4f9a; --pinkd:#d22f76; --gold:#ffc23d; --goldd:#c98a00; --blush:#ffe4ef; --ok:#3fbf6a; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { background:#fbe3f0; }
+  body { margin:0; font-family:'Fredoka',system-ui,sans-serif; color:var(--ink); min-height:100vh;
+         background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23ff4f9a' opacity='.07'%3E%3Cpath d='M14 34 L18 22 L24 30 L30 18 L36 30 L42 22 L46 34Z'/%3E%3Ccircle cx='86' cy='88' r='5'/%3E%3Ccircle cx='78' cy='80' r='3'/%3E%3Ccircle cx='86' cy='76' r='3'/%3E%3Ccircle cx='94' cy='80' r='3'/%3E%3C/g%3E%3C/svg%3E") 0 0/120px 120px, linear-gradient(165deg,#ffe6f1 0%,#f8def4 50%,#ebe0ff 100%) fixed; }
+  h1, h2, .big, .display { font-family:'Lilita One','Fredoka',system-ui,sans-serif; font-weight:400; letter-spacing:.2px; }
+  button:focus-visible { outline:3px solid #8a4fff; outline-offset:2px; }
+  #app { max-width:920px; margin:0 auto; padding:12px 12px 28px; }
+  header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .logo { flex:none; width:46px; height:46px; border-radius:15px; display:grid; place-items:center; font-size:25px; transform:rotate(-6deg);
+          background:linear-gradient(145deg,#ff6aac,#c03ad8); box-shadow:0 4px 0 #8a1f6a, inset 0 2px 0 #ffffff66; }
+  h1 { font-size:clamp(23px,4.6vw,33px); margin:0; line-height:1; color:var(--ink); text-shadow:0 2px 0 #fff; }
+  h1 small { display:block; font-family:'Fredoka',sans-serif; font-size:13px; font-weight:500; color:var(--ink2); margin-top:4px; text-shadow:none; }
+  .hud { display:flex; gap:6px; flex-wrap:wrap; font-weight:600; font-size:clamp(12px,2vw,15px); }
+  .hud div, .hud button { background:#fff; padding:5px 11px; border-radius:999px; box-shadow:0 3px 0 #3a18461c; color:var(--ink); transition:background .3s, color .3s; }
+  .hud button { font:inherit; border:none; cursor:pointer; }
+  #hudStrikes.warn { background:#ffe0e8; color:#c2185b; }
+  #hudStrikes.danger { background:#e0245e; color:#fff; animation:tickPulse 1s ease-in-out infinite; }
+
+  .meters { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:10px 0; }
+  @media (max-width:600px){ .meters { grid-template-columns:repeat(2,1fr); gap:6px; } }
+  .meter { display:flex; align-items:center; gap:8px; background:#fff; border-radius:15px; padding:6px 10px 7px 6px; box-shadow:0 3px 0 #3a18461a; }
+  .meter .mi { flex:none; width:32px; height:32px; border-radius:11px; display:grid; place-items:center; font-size:18px; background:var(--blush); transition:background .3s; }
+  .meter .mm { flex:1; min-width:0; }
+  .meter .ml { display:flex; justify-content:space-between; font-size:12.5px; font-weight:600; color:var(--ink2); }
+  .meter .ml b { color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums; }
+  .meter.low .mi { background:#ffd3dc; animation:tickPulse 1s ease-in-out infinite; }
+  .bar { height:10px; background:#f2e9f4; border-radius:6px; overflow:hidden; margin-top:3px; box-shadow:inset 0 1px 2px #3a18461f; }
+  .bar i { display:block; height:100%; width:50%; background-color:var(--ok); background-image:linear-gradient(#ffffff66,#ffffff00 65%); transition:width .4s, background-color .4s; border-radius:6px; }
+
+  /* ---------- Scene ---------- */
+  #scene { position:relative; width:100%; aspect-ratio:16/10; border-radius:22px; overflow:hidden; border:4px solid #fff;
+           box-shadow:0 6px 0 #3a184624, 0 16px 34px #3a18461f; background:linear-gradient(#8fd3ff,#e3f5ff 70%); transition:background 1.2s;
+           user-select:none; -webkit-user-select:none; }
+  #scene.rainy { background:linear-gradient(#66778a,#aab7c5 70%); }
+  #scene.cold  { background:linear-gradient(#b7d0e6,#f0f7fc 70%); }
+  .ground { position:absolute; left:0; right:0; bottom:0; height:30%; background:linear-gradient(#80d166,#5aad47); transition:background 1.2s; }
+  #scene.rainy .ground { background:linear-gradient(#5c974e,#4b823f); }
+  #scene.cold .ground  { background:linear-gradient(#eef7f8,#cfe2e7); }
+  .slab { position:absolute; left:27%; right:0; bottom:0; height:30%; z-index:0; box-shadow:inset 0 10px 14px -8px #0003;
+          background:radial-gradient(#0000000d 1px, transparent 1.6px) 0 0/8px 8px, linear-gradient(#d9d5ce,#c4bfb6); border-top:3px solid #b4aea4; }
+  .slab::after { content:''; position:absolute; left:48%; top:0; bottom:0; width:2px; background:#0002; }
+  #scene.rainy .slab { background:radial-gradient(#0000000d 1px, transparent 1.6px) 0 0/8px 8px, linear-gradient(#a9a49b,#97928a); }
+  .fence { position:absolute; left:27%; right:0; bottom:30%; height:30%; background:repeating-linear-gradient(180deg,#9a6244 0 2.5%,#7e4c34 2.5% 19%,#56321f 19% 22%,transparent 22% 30%); }
+  .fence::before { content:''; position:absolute; left:0; right:0; top:-8%; bottom:0; background:repeating-linear-gradient(90deg,transparent 0 23%,#4a2a1a 23% 24.6%,#6a3f29 24.6% 25%); }
+  .vine { position:absolute; font-size:clamp(16px,3vw,28px); z-index:0; }
+  .sun { position:absolute; top:7%; right:24%; width:11%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 40% 40%,#fffbd6,#ffd23d 70%); box-shadow:0 0 50px #ffd23daa; transition:opacity 1s; }
+  .sun::before { content:''; position:absolute; inset:-70%; border-radius:50%; background:repeating-conic-gradient(#fff4a855 0 9deg, transparent 9deg 24deg);
+                 -webkit-mask:radial-gradient(circle, transparent 32%, #000 34%, transparent 70%); mask:radial-gradient(circle, transparent 32%, #000 34%, transparent 70%); animation:spin 40s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  #scene:not(.sunny) .sun { opacity:0; }
+  .tree { position:absolute; right:-5%; bottom:56%; width:20%; height:42%; z-index:0; }
+  .tree .canopy { position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 40% 40%,#ffd04d,#f0a31c 55%,#c9761a); }
+  #scene.windy .tree .canopy { animation:sway .5s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform:rotate(-4deg); } to { transform:rotate(5deg) translateX(-4%); } }
+  .cloud { position:absolute; width:17%; height:6.5%; border-radius:999px; background:#fff; opacity:.8; transition:opacity 1s, background 1.2s; animation:drift 16s ease-in-out infinite alternate; filter:drop-shadow(0 5px 0 #3a184610); }
+  .cloud::before, .cloud::after { content:''; position:absolute; background:inherit; border-radius:50%; aspect-ratio:1; }
+  .cloud::before { left:14%; bottom:30%; width:46%; }
+  .cloud::after { left:46%; bottom:22%; width:34%; }
+  #scene.rainy .cloud { background:#8592a4; opacity:1; }
+  #scene.cold .cloud { background:#f4f8fc; opacity:1; }
+  @keyframes drift { to { transform:translateX(40px); } }
+  #wind { position:absolute; inset:0; pointer-events:none; z-index:4; overflow:hidden; display:none; }
+  #scene.windy #wind { display:block; }
+  .gust { position:absolute; height:3px; width:22%; border-radius:3px; background:#ffffffaa; animation:gust 1.1s linear infinite; }
+  @keyframes gust { from { transform:translateX(120vw); } to { transform:translateX(-40vw); } }
+
+  .house { position:absolute; left:0; bottom:30%; width:27%; height:64%; background:repeating-linear-gradient(180deg,#f4dab3 0 13px,#e6c797 13px 15px); border-right:6px solid #d4b182; box-shadow:6px 0 14px #0000001f; z-index:1; }
+  .house::before { content:''; position:absolute; left:-2%; right:-8%; top:0; height:5%; background:#5c4a5e; border-radius:0 0 4px 0; }
+  .house .window { position:absolute; top:7%; left:30%; width:40%; height:16%; background:#bfe6ff; border:5px solid #fff; border-radius:6px; }
+  .interior { position:absolute; left:4%; width:19%; bottom:30%; height:42%; z-index:1; background:linear-gradient(#d8b48e 0 72%, #9c7550 72%); }
+  .interior .couch { position:absolute; right:6%; bottom:24%; font-size:clamp(16px,3.4vw,30px); opacity:.85; }
+  .interior .lamp { position:absolute; left:8%; bottom:28%; font-size:clamp(12px,2.4vw,22px); opacity:.85; }
+  #glassDoor { position:absolute; left:4%; width:19%; bottom:30%; height:42%; z-index:4; cursor:pointer;
+               border:6px solid #f4efe4; border-bottom:none; border-radius:6px 6px 0 0;
+               background:linear-gradient(115deg, rgba(255,255,255,.38) 0 14%, rgba(190,225,255,.16) 14% 28%, rgba(255,255,255,.3) 28% 32%, rgba(190,225,255,.12) 32%);
+               box-shadow:inset 0 0 0 2px #d9d2c3; }
+  #glassDoor::before { content:''; position:absolute; left:50%; top:0; bottom:0; width:5px; margin-left:-2px; background:#f4efe4; }
+  #glassDoor::after { content:''; position:absolute; left:calc(50% - 12px); top:46%; width:4px; height:16%; border-radius:2px; background:#8a8a8a; }
+  .mat { position:absolute; left:4%; bottom:26.5%; width:19%; height:3.2%; background:#8a5a2b; border-radius:3px; z-index:1; }
+  .pumpkin { position:absolute; left:23.5%; bottom:25%; font-size:clamp(18px,3.4vw,32px); z-index:1; }
+  #fx { position:absolute; inset:0; pointer-events:none; z-index:4; overflow:hidden; }
+  .drop { position:absolute; top:-12%; width:2px; height:16px; background:#ffffffb0; animation:fall linear infinite; }
+  .flake { position:absolute; top:-8%; color:#fff; text-shadow:0 0 3px #8ab; animation:snow linear infinite; }
+  @keyframes fall { to { transform:translateY(700px); } }
+  @keyframes snow { to { transform:translate(30px,700px) rotate(200deg); } }
+
+  #chair { position:absolute; left:62%; bottom:20%; width:26%; z-index:2; filter:drop-shadow(0 4px 2px #0002); }
+  .shadow { position:absolute; height:4%; border-radius:50%; background:radial-gradient(closest-side,#00000038,transparent); z-index:1; pointer-events:none; }
+  #scene::after { content:''; position:absolute; inset:0; pointer-events:none; z-index:9; box-shadow:inset 0 0 90px #3a184626; }
+  #umbrella { position:absolute; left:54%; bottom:15%; width:42%; z-index:1; transform-origin:bottom center; transition:transform .5s, opacity .5s; opacity:0; transform:scale(.5); pointer-events:none; }
+  #umbrella.on { opacity:1; transform:scale(1); }
+  #leafLayer { position:absolute; inset:0; pointer-events:none; z-index:2; }
+  .leaf { position:absolute; font-size:clamp(13px,2.4vw,22px); transition:left 1.4s ease-out, bottom 1.4s ease-in, transform 1.4s, opacity .4s; }
+  .leaf.tiny { width:clamp(6px,1.1vw,10px); height:clamp(3px,.6vw,5px); border-radius:50%; background:#e9b10f; }
+
+  /* ---------- Rosie ---------- */
+  #rosie { position:absolute; width:18%; z-index:3; cursor:pointer; touch-action:none; transition:left .7s ease, bottom .7s ease, width .7s ease, opacity .5s ease; }
+  #rosie.at-inside { width:13%; z-index:2; }
+  #rosie.at-mat { width:15%; z-index:5; }
+  #rosie.belly { z-index:6; }
+  #rosie.hidden-in { opacity:0; pointer-events:none; }
+  #rosie.zoom { width:21%; transition:left .8s ease-in-out, bottom .8s ease-in-out; }
+  .rosie-svg { width:100%; display:block; overflow:visible; transition:transform .5s; filter:drop-shadow(0 4px 3px #00000030); }
+  .rosie-wrap .harness, .rosie-wrap .blanket, .rosie-wrap .shades, .rosie-wrap .eyes-happy, .rosie-wrap .tongue, .rosie-wrap .hat, .rosie-wrap .howl-mouth { display:none; }
+  .rosie-wrap.harness .harness, .rosie-wrap.blanket .blanket, .rosie-wrap.shades .shades, .rosie-wrap.happy .eyes-happy, .rosie-wrap.happy .tongue, .rosie-wrap.hat .hat { display:inline; }
+  .rosie-wrap.happy .eyes { display:none; }
+  .rosie-wrap.shiver .rosie-svg { animation:shiver .12s linear infinite; }
+  .rosie-wrap.want .rosie-svg { animation:scratch .35s ease-in-out infinite alternate; }
+  .rosie-wrap.dance .rosie-svg { animation:dance .3s ease-in-out infinite alternate; }
+  .rosie-wrap.refuse .rosie-svg { animation:refuse .5s ease 2; }
+  .rosie-wrap.zoom .rosie-svg { animation:zoomy .35s ease-in-out infinite alternate; }
+  .rosie-wrap.belly .rosie-svg { transform:rotate(180deg); animation:bellyWiggle .5s ease-in-out infinite alternate; }
+  .rosie-wrap.howl .howl-mouth, .rosie-wrap.howl .eyes-happy { display:inline; }
+  .rosie-wrap.howl .eyes, .rosie-wrap.howl .tongue { display:none; }
+  .rosie-wrap.howl .rosie-svg { animation:howlBob .9s ease-in-out infinite alternate; transform-origin:50% 80%; }
+  @keyframes shiver { 0%,100% { transform:translateX(-2px); } 50% { transform:translateX(2px); } }
+  @keyframes scratch { from { transform:rotate(-5deg); } to { transform:rotate(5deg) translateY(-3%); } }
+  @keyframes dance { from { transform:translateX(-5%) rotate(-5deg); } to { transform:translateX(5%) rotate(5deg); } }
+  @keyframes refuse { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-14deg); } 75% { transform:rotate(14deg); } }
+  @keyframes zoomy { from { transform:rotate(-14deg); } to { transform:rotate(14deg) translateY(-8%); } }
+  @keyframes bellyWiggle { from { transform:rotate(172deg); } to { transform:rotate(188deg); } }
+  @keyframes howlBob { from { transform:rotate(-8deg); } to { transform:rotate(-18deg) translateY(-3%); } }
+
+  /* ---------- Rosie's bubble: sass, and what she needs ---------- */
+  #bubble { position:absolute; left:0; top:0; background:#fff; border-radius:18px; padding:8px 12px; color:var(--ink); line-height:1.25;
+            font-size:clamp(12px,1.9vw,15px); font-weight:600; width:max-content; max-width:min(300px,64%);
+            box-shadow:0 4px 0 #3a18461f, 0 8px 18px #3a184626; opacity:0; transition:opacity .25s; pointer-events:none; text-align:center; z-index:15; }
+  #bubble.show { opacity:1; animation:bubPop .28s cubic-bezier(.2,1.5,.5,1); }
+  @keyframes bubPop { from { transform:scale(.85); } }
+  #bubble::after { content:''; position:absolute; top:100%; left:var(--arrow,50%); border:8px solid transparent; border-top-color:#fff; transform:translateX(-50%); }
+  #bubble.need { border:3px solid #ff8a00; pointer-events:auto; text-align:left; }
+  #bubble.need::after { border-top-color:#ff8a00; }
+  #bubble.need.urgent { border-color:#e03131; }
+  #bubble.need.urgent::after { border-top-color:#e03131; }
+  #bubble.need.howlb { border-color:#5b2a86; }
+  #bubble.need.howlb::after { border-top-color:#5b2a86; }
+  .need-row { display:flex; align-items:center; gap:8px; }
+  .need-row .q { flex:1; }
+  .need-btns { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; justify-content:center; }
+  .need-btns button { font:inherit; font-size:clamp(18px,3.4vw,24px); line-height:1; border:none; border-radius:12px; padding:6px 10px; cursor:pointer;
+                      background:#fff3c4; box-shadow:0 2px 0 #0003; }
+  .need-btns button small { display:block; font-size:11px; font-weight:600; margin-top:2px; }
+  .need-btns button:active { transform:translateY(2px); box-shadow:none; }
+  .clock { --p:100; --c:#ff5a5a; display:inline-flex; align-items:center; justify-content:center; flex:none;
+           width:2.4em; height:2.4em; border-radius:50%; font-weight:700; font-size:.85em; background:conic-gradient(var(--c) calc(var(--p) * 1%), #0000001f 0); }
+  .clock b { display:flex; align-items:center; justify-content:center; width:76%; height:76%; border-radius:50%; background:#fff; }
+  .clock.low { --c:#e03131; animation:tickPulse 1s ease-in-out infinite; }
+  @keyframes tickPulse { 50% { transform:scale(1.12); } }
+
+  #note { position:absolute; left:50%; bottom:10px; transform:translate(-50%,20px); background:#3a1846e8; color:#fff; border-radius:12px; padding:6px 12px;
+          font-size:clamp(12px,1.9vw,14px); font-weight:600; z-index:12; opacity:0; transition:all .3s; pointer-events:none; max-width:92%; text-align:center; }
+  #note.show { opacity:1; transform:translate(-50%,0); }
+  #rubMeter { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:55%; background:#fff; padding:5px 10px; border-radius:12px; font-weight:600; font-size:13px; z-index:10; display:none; text-align:center; }
+  #rubMeter.show { display:block; }
+  #veil { position:absolute; inset:0; background:#fff9; display:none; align-items:center; justify-content:center; z-index:20; font-size:clamp(16px,3vw,24px); font-weight:700; text-align:center; padding:20px; }
+  #veil.show { display:flex; }
+  .float { position:absolute; font-size:22px; pointer-events:none; animation:floatUp 1.3s ease-out forwards; z-index:6; }
+  @keyframes floatUp { to { transform:translateY(-70px) scale(1.3); opacity:0; } }
+  #scene.jolt { animation:refuse .4s ease; }
+
+  .awoo { position:absolute; font-weight:700; color:#5b2a86; font-size:clamp(14px,2.6vw,24px); pointer-events:none; z-index:6; text-shadow:0 2px 0 #fff; white-space:nowrap; animation:awooUp 1.8s ease-out forwards; }
+  @keyframes awooUp { to { transform:translate(-30px,-90px) rotate(-12deg) scale(1.3); opacity:0; } }
+  #neighbors { position:absolute; inset:0; pointer-events:none; }
+  .neighbor { position:absolute; bottom:58%; font-size:clamp(24px,5vw,44px); transform:translateY(60%); opacity:0; transition:transform .35s ease-out, opacity .35s; }
+  .neighbor.up { transform:translateY(0); opacity:1; }
+  .neighbor span { position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#fff; border-radius:10px; padding:3px 8px; font-size:clamp(10px,1.6vw,13px); font-weight:600; white-space:nowrap; box-shadow:0 2px 0 #0002; }
+  #siren { position:absolute; inset:0; z-index:8; pointer-events:none; display:none; mix-blend-mode:multiply; animation:siren .5s steps(1) infinite; }
+  #siren.on { display:block; }
+  @keyframes siren { 0% { background:radial-gradient(circle at 15% 0%, #ff2d2d88, transparent 60%); } 50% { background:radial-gradient(circle at 85% 0%, #2d6bff88, transparent 60%); } }
+  #cop { position:absolute; bottom:4%; left:110%; font-size:clamp(40px,8vw,72px); z-index:7; transition:left 1.4s ease-out; pointer-events:none; }
+  #cop.in { left:44%; }
+  #cop span { position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#fff; border-radius:10px; border:2px solid #2d6bff; padding:3px 9px; font-size:clamp(11px,1.8vw,14px); font-weight:600; white-space:nowrap; }
+
+  /* ---------- Buttons ---------- */
+  .actions { display:grid; grid-template-columns:repeat(auto-fit,minmax(70px,1fr)); gap:8px; margin-top:12px; }
+  @media (max-width:420px){ .actions { gap:6px; grid-template-columns:repeat(auto-fit,minmax(64px,1fr)); } }
+  .act { background:#fff; border:none; border-radius:17px; padding:8px 2px 9px; font:inherit; font-weight:600; font-size:clamp(11px,1.8vw,13.5px); cursor:pointer;
+         box-shadow:0 4px 0 #3a184626; display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--ink); transition:transform .08s, box-shadow .08s, background .2s; }
+  .act b { width:clamp(36px,6.4vw,46px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center; background:var(--blush); font-size:clamp(19px,3.8vw,25px); font-weight:400; transition:background .2s, transform .2s; }
+  .act:hover b { transform:scale(1.06); }
+  .act:active { transform:translateY(3px); box-shadow:0 1px 0 #3a184626; }
+  .act:disabled { opacity:.45; cursor:default; }
+  .act:disabled b { filter:grayscale(1); }
+  .act.on { background:#fff7df; }
+  .act.on b { background:var(--gold); }
+  .act.urgent { background:#fff7df; outline:3px solid var(--gold); animation:glowO 1s ease-in-out infinite; }
+  .act.urgent b { background:#ffe39a; }
+  @keyframes glowO { 50% { box-shadow:0 4px 0 #3a184626, 0 0 0 7px #ffc23d55; } }
+
+  /* ---------- Modal ---------- */
+  #modal { position:fixed; inset:0; background:#2a0f36a8; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; z-index:50; padding:12px; }
+  #modal.show { display:flex; }
+  #modal.show .card { animation:cardIn .38s cubic-bezier(.2,1.35,.5,1); }
+  @keyframes cardIn { from { transform:translateY(24px) scale(.94); opacity:0; } }
+  .card { background:var(--cream); border:3px solid #fff; border-radius:26px; padding:18px 18px 20px; max-width:480px; width:100%; text-align:center;
+          box-shadow:0 8px 0 #3a184633, 0 24px 60px #0005; max-height:94vh; overflow:auto; }
+  .card h2 { margin:2px 0 8px; font-size:28px; line-height:1.05; color:var(--ink); }
+  .card p { margin:6px 0; line-height:1.35; }
+  .small { font-size:14px; color:var(--ink2); }
+  .choices { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .choice, .big { font:inherit; font-weight:600; border:none; border-radius:16px; padding:12px; background:#fff; box-shadow:0 4px 0 #3a184626; cursor:pointer; font-size:16px; color:var(--ink); }
+  .choice small { display:block; font-size:12px; opacity:.7; font-weight:400; }
+  .choice:active { transform:translateY(3px); box-shadow:0 1px 0 #3a184626; }
+  .choice:disabled { opacity:.45; }
+  .big { font-family:'Lilita One','Fredoka',sans-serif; font-weight:400; background:linear-gradient(#ff72b1,var(--pink)); color:#fff; font-size:21px; padding:12px 30px; margin-top:12px;
+         box-shadow:0 5px 0 var(--pinkd), inset 0 2px 0 #ffffff66; text-shadow:0 2px 0 #0000002a; letter-spacing:.3px; }
+  .big:active { transform:translateY(4px); box-shadow:0 1px 0 var(--pinkd); }
+  .big:disabled { filter:grayscale(.5); opacity:.7; }
+  .link { background:none; border:none; font:inherit; color:var(--ink2); text-decoration:underline; cursor:pointer; margin-top:10px; }
+  .rules { text-align:left; font-size:15px; padding:0; margin:10px 0; list-style:none; display:grid; gap:7px; }
+  .rules li { display:flex; gap:10px; align-items:flex-start; line-height:1.3; }
+  .rules li span { flex:none; width:30px; height:30px; border-radius:10px; background:var(--blush); display:grid; place-items:center; font-size:17px; }
+  .headshot { width:132px; height:132px; object-fit:cover; border-radius:50%; border:5px solid #fff; box-shadow:0 0 0 4px var(--gold), 0 6px 0 4px #c98a0055; }
+  .mini-rosie { width:130px; margin:6px auto; }
+  .phone { font-size:64px; display:inline-block; animation:ring .12s linear infinite alternate; }
+  @keyframes ring { from { transform:rotate(-12deg); } to { transform:rotate(12deg); } }
+  .marquee { display:flex; justify-content:space-between; padding:0 6px; margin:-4px 0 12px; }
+  .marquee i, .bulb { width:10px; height:10px; border-radius:50%; background:#fff1b8; box-shadow:0 0 8px #ffd23d, 0 0 2px #fff inset; animation:bulb .6s steps(1) infinite; }
+  .marquee i:nth-child(even), .bulb:nth-child(even) { animation-delay:.3s; }
+  @keyframes bulb { 50% { background:#b68a3a; box-shadow:none; } }
+  .hero { position:relative; display:inline-block; margin-top:4px; }
+  .hero .crown { position:absolute; left:50%; top:-26px; transform:translateX(-50%) rotate(-8deg); font-size:40px; filter:drop-shadow(0 3px 0 #0002); }
+  .title-card h2.title { font-size:34px; margin-top:10px; }
+  .tag { color:var(--ink2); }
+  @media (prefers-reduced-motion: reduce) { .sun::before, .marquee i, .bulb, .cloud, #bubble.show, #modal.show .card { animation:none !important; } }
+
+  /* ---------- Kibble pour ---------- */
+  #pourArea { position:relative; height:230px; border-radius:14px; background:linear-gradient(#e9d7c4 0 70%, #b48a62 70%); overflow:hidden; margin-top:6px; }
+  #bag { position:absolute; left:50%; top:4px; width:72px; transform:translateX(-50%) rotate(0); transform-origin:50% 90%; transition:transform .2s; text-align:center; }
+  #bag.tilt { transform:translateX(-50%) rotate(140deg); }
+  #bowl { position:absolute; left:50%; bottom:20px; width:200px; height:96px; transform:translateX(-50%); border-radius:0 0 100px 100px / 0 0 80px 80px;
+          background:#c9ced3; border:6px solid #9aa2a9; border-top-width:8px; overflow:hidden; }
+  #zone { position:absolute; left:0; right:0; z-index:2; background:#5cc96b44; border-top:2px dashed #2f9e44; border-bottom:2px dashed #2f9e44; }
+  #fill { position:absolute; left:0; right:0; bottom:0; height:0; background:radial-gradient(#b5793a 2px, transparent 2.5px) 0 0/9px 8px, linear-gradient(#c8873f,#9a5f24); }
+  .kib { position:absolute; width:8px; height:7px; border-radius:40%; background:#b5793a; top:70px; animation:kibFall .45s linear forwards; }
+  @keyframes kibFall { to { transform:translateY(95px); opacity:.6; } }
+  #pourArea { transition:height .45s ease, margin .45s ease, opacity .3s; }
+  #pourArea.gone { height:0 !important; margin:0; opacity:0; }
+  #overflow { position:absolute; left:0; right:0; bottom:8px; text-align:center; font-size:22px; opacity:0; transition:opacity .3s; }
+  #pourBtn { touch-action:none; user-select:none; -webkit-user-select:none; }
+
+  /* ---------- Walk ---------- */
+  #lane { position:relative; height:210px; border-radius:14px; overflow:hidden; margin-top:8px; background:linear-gradient(#bfe8ff 0 40%, #6fbf55 40% 72%, #cfcfcf 72%); }
+  #lane.rainy { background:linear-gradient(#7d8c9c 0 40%, #4f8a42 40% 72%, #a9a9a9 72%); }
+  #lane.cold  { background:linear-gradient(#cfe2f0 0 40%, #b9cfae 40% 72%, #d8dde0 72%); }
+  #lane::before { content:''; position:absolute; left:0; right:-80px; bottom:0; height:28%; background:repeating-linear-gradient(90deg,transparent 0 58px,#0002 58px 61px); animation:slide .6s linear infinite; animation-play-state:paused; z-index:1; }
+  #lane.moving::before, #lane.moving .condos, #lane.moving .trees { animation-play-state:running; }
+  #lane .condos { position:absolute; left:0; top:18px; height:133px; width:calc(100% + 333px); background-repeat:repeat-x; background-size:333px 133px; animation:condoScroll 5s linear infinite paused; }
+  #lane .trees { position:absolute; left:0; top:-8px; height:74px; width:calc(100% + 260px); background-repeat:repeat-x; background-size:260px 74px; animation:treeScroll 2.9s linear infinite paused; z-index:1; }
+  #lane.rainy .condos, #lane.rainy .trees { filter:brightness(.72) saturate(.8); }
+  #lane.cold .condos, #lane.cold .trees { filter:saturate(.55) brightness(1.05); }
+  @keyframes condoScroll { to { transform:translateX(-333px); } }
+  @keyframes treeScroll { to { transform:translateX(-260px); } }
+  @keyframes slide { to { transform:translateX(-61px); } }
+  .walker { position:absolute; left:58%; bottom:10px; width:96px; z-index:2; transition:bottom .25s; cursor:pointer; }
+  .walker.s-walk { animation:trot .25s ease-in-out infinite alternate; }
+  .walker.s-sit .rosie-svg { animation:scratch .35s ease-in-out infinite alternate; }
+  .walker.carried { bottom:62px; animation:none; }
+  .walker.carried::after { content:'👐'; position:absolute; left:50%; bottom:-36px; transform:translateX(-50%); font-size:40px; }
+  @keyframes trot { to { transform:translateY(-6px); } }
+  .lane-bubble { position:absolute; top:6px; z-index:4 !important; left:0; right:0; margin:auto; width:max-content; max-width:92%; background:#fff; border-radius:10px; padding:4px 12px; font-weight:700; font-size:15px; z-index:3; box-shadow:0 2px 0 #0002; }
+  .poop { position:absolute; bottom:8px; left:58%; font-size:34px; background:none; border:none; cursor:pointer; padding:8px; z-index:3; transition:left 1.25s linear; }
+  .poop.got { transition:transform .3s, opacity .3s; transform:translateY(-40px) scale(1.4); opacity:0; }
+  #shoe { position:absolute; left:6px; bottom:6px; font-size:22px; }
+  .trail { display:flex; align-items:center; gap:6px; margin-top:8px; font-size:18px; }
+  .trail .track { flex:1; height:8px; background:#0001; border-radius:4px; position:relative; }
+  .trail .track i { position:absolute; top:50%; transform:translate(-50%,-50%); font-style:normal; font-size:20px; transition:left .3s linear; }
+  #walkMsg { min-height:1.4em; margin-top:6px; font-weight:600; }
+
+  /* ---------- Leaf blower ---------- */
+  #porch { position:relative; height:280px; border-radius:14px; overflow:hidden; touch-action:none; cursor:none; margin-top:6px; background:radial-gradient(#0000000f 1px, transparent 1.6px) 0 0/8px 8px, linear-gradient(#dcd8d1,#c9c4bb); }
+  #porch::before { content:''; position:absolute; left:0; right:0; top:0; height:16%; background:repeating-linear-gradient(180deg,#7b4a34 0 40%,transparent 40% 55%); }
+  .pleaf { position:absolute; left:0; top:0; font-size:22px; pointer-events:none; will-change:transform; line-height:1; }
+  .pleaf.tiny { width:12px; height:6px; border-radius:50%; background:#e9b10f; }
+  .throne { position:absolute; left:50%; top:52%; width:110px; transform:translate(-50%,-50%); pointer-events:none; }
+  .throne svg.chair-svg { width:100%; display:block; }
+  .throne .rosie-wrap { position:absolute; width:70%; left:15%; top:-14px; }
+  #blower { position:absolute; left:0; top:0; width:170px; height:170px; margin:-85px 0 0 -85px; border-radius:50%; border:2px dashed #ffffffcc; background:radial-gradient(#ffffff40,transparent 70%); pointer-events:none; display:none; }
+  #blower.on { display:block; }
+  #blower.danger { border-color:#ff3b3b; background:radial-gradient(#ff3b3b55,transparent 70%); }
+  #blower svg { position:absolute; left:50%; top:50%; width:90px; transform:translate(-30%,0); }
+  .porch-bubble { position:absolute; left:50%; top:8%; transform:translateX(-50%); background:#fff; border-radius:10px; padding:3px 9px; font-weight:600; font-size:13px; opacity:0; transition:opacity .2s; pointer-events:none; white-space:nowrap; z-index:3; }
+  .porch-bubble.show { opacity:1; }
+
+
+  /* ---------- Topping wheel ---------- */
+  #wheelStage { position:relative; width:270px; height:270px; margin:14px auto 0; }
+  #wheelWrap { position:absolute; inset:0; border-radius:50%; padding:16px; background:radial-gradient(circle,#62287a 62%,#3a1846 63%); box-shadow:0 7px 0 #24092f, 0 14px 28px #0005; }
+  #wheelWrap.landed { animation:wheelPop .55s cubic-bezier(.2,1.5,.5,1); }
+  @keyframes wheelPop { 35% { transform:scale(1.08); } }
+  #wheel { position:relative; width:100%; height:100%; border-radius:50%; box-shadow:inset 0 0 0 4px #ffffffb0, inset 0 0 26px #0004; will-change:transform; }
+  #wheelWrap.blur #wheel { filter:blur(.7px) saturate(1.2); }
+  #wheel .sl { position:absolute; left:50%; top:50%; font-size:23px; line-height:1; white-space:nowrap; text-align:center; filter:drop-shadow(0 2px 0 #0003); }
+  #wheel .sl small { display:block; font-size:12px; }
+  #wheelHub { position:absolute; left:50%; top:50%; width:46px; height:46px; margin:-23px; border-radius:50%; display:grid; place-items:center; font-size:21px; z-index:2;
+              background:radial-gradient(circle at 35% 30%,#fff0b3,#ffc23d 55%,#c98a00); box-shadow:0 3px 0 #8a5d00, 0 0 0 3px #fff; }
+  #wheelPtr { position:absolute; left:50%; top:-10px; width:36px; height:46px; margin-left:-18px; z-index:3; transform-origin:50% 22%; filter:drop-shadow(0 3px 0 #0005); }
+  #wheelPtr.tick { animation:ptrTick .13s ease-out; }
+  @keyframes ptrTick { 40% { transform:rotate(-24deg); } }
+  #wheelWrap .bulb { position:absolute; margin:-5px; }
+  #wheelWrap.fast .bulb { animation-duration:.16s; }
+  #wheelWrap.landed .bulb { animation-duration:.1s; }
+  #wheelBurst { position:absolute; inset:-30px; pointer-events:none; display:grid; place-items:center; z-index:5; }
+  .wb-card { background:#fff; border-radius:22px; padding:10px 18px 12px; min-width:180px; box-shadow:0 6px 0 #3a184633, 0 14px 34px #0005; text-align:center; animation:burstIn .6s cubic-bezier(.2,1.6,.4,1) both; border:3px solid #fff; }
+  .wb-card .e { font-size:66px; line-height:1.05; display:block; animation:emojiSpin .9s cubic-bezier(.2,1.2,.4,1) both; }
+  .wb-card b { font-family:'Lilita One','Fredoka',sans-serif; font-weight:400; font-size:27px; display:block; color:var(--ink); }
+  .wb-card span { font-size:14px; font-weight:600; color:var(--ink2); }
+  .wb-card.jackpot { background:linear-gradient(#fffbe6,#ffd95e); box-shadow:0 6px 0 #c98a00, 0 0 40px #ffd23d; }
+  .wb-card.hate { background:linear-gradient(#f5f2f8,#d9d2e2); }
+  .wb-card.none { background:linear-gradient(#f4f4f4,#dcdcdc); }
+  .wb-card.grill { background:linear-gradient(#fff3e3,#ffae5c); box-shadow:0 6px 0 #c4541a, 0 0 40px #ff7a1a; }
+  @keyframes burstIn { from { transform:scale(0) rotate(-25deg); opacity:0; } }
+  @keyframes emojiSpin { from { transform:scale(.1) rotate(-720deg); } }
+  .conf { position:absolute; left:50%; top:50%; font-size:22px; z-index:6; pointer-events:none; animation:conf 1.5s cubic-bezier(.12,.8,.35,1) forwards; }
+  @keyframes conf { 0% { transform:translate(-50%,-50%) scale(.4); opacity:1; } 80% { opacity:1; } 100% { transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--r)) scale(1.1); opacity:0; } }
+  .card.shake { animation:cardShake .45s linear !important; }
+  @keyframes cardShake { 20% { transform:translateX(-10px) rotate(-1deg); } 40% { transform:translateX(9px) rotate(1deg); } 60% { transform:translateX(-6px); } 80% { transform:translateX(4px); } }
+  .card.flash-gold { animation:flashGold .9s ease !important; }
+  @keyframes flashGold { 20% { box-shadow:0 8px 0 #3a184633, 0 0 0 10px #ffd23d, 0 0 80px #ffd23d; } }
+  #wheelMsg { min-height:2.8em; font-weight:600; margin-top:12px; }
+  .drum { display:inline-block; color:var(--pinkd); font-weight:700; animation:drum .09s linear infinite alternate; }
+  @keyframes drum { to { transform:translateY(-2px) rotate(2deg); } }
+
+  /* ---------- Grill ---------- */
+  #grill { position:relative; height:150px; border-radius:14px; margin-top:6px; overflow:hidden;
+           background:repeating-linear-gradient(90deg,#2b2b2b 0 10px,#555 10px 14px), #222; }
+  #grill .meat { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:74px; transition:transform .25s, filter .2s; }
+  #grill .meat.flip { transform:translate(-50%,-50%) rotateX(180deg) scale(1.2); }
+  #grill .smoke { position:absolute; bottom:40%; font-size:24px; opacity:0; animation:smoke 1.6s ease-out infinite; }
+  @keyframes smoke { 0% { opacity:0; transform:translateY(10px); } 30% { opacity:.8; } 100% { opacity:0; transform:translateY(-70px) scale(1.6); } }
+  #grill .flare { position:absolute; left:0; right:0; bottom:0; height:0; text-align:center; font-size:56px; line-height:1; transition:height .15s; overflow:hidden; }
+  #grill.flaring .flare { height:100%; }
+  #grill.flaring { animation:refuse .3s linear infinite; }
+  #doneBar { position:relative; height:30px; border-radius:10px; overflow:hidden; margin-top:10px; border:3px solid #3b2a20; }
+  #doneBar .z { position:absolute; top:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; text-shadow:0 1px 0 #0006; }
+  #needle { position:absolute; top:-4px; bottom:-4px; width:6px; margin-left:-3px; background:#111; border-radius:3px; box-shadow:0 0 0 2px #fff; }
+  #grillMsg { min-height:1.5em; font-weight:600; margin-top:6px; }
+
+  /* ---------- Rub game ---------- */
+  #rubPad { position:relative; height:250px; border-radius:16px; margin-top:6px; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; cursor:grab;
+            background:radial-gradient(circle at 50% 60%, #ffe1ef 0 40%, #f7c6dc 70%); }
+  #rubPad .rub-rosie { position:absolute; left:50%; top:54%; width:150px; transform:translate(-50%,-50%); pointer-events:none; }
+  #rubCue { position:absolute; left:0; right:0; top:8px; text-align:center; font-size:46px; font-weight:700; line-height:1; pointer-events:none; text-shadow:0 3px 0 #fff; }
+  #rubCue small { display:block; font-size:15px; margin-top:2px; color:#5b2a86; }
+  #rubCue.fake { animation:refuse .3s linear 2; }
+  #rubTime { position:absolute; left:10px; right:10px; bottom:10px; height:8px; background:#0001; border-radius:4px; overflow:hidden; }
+  #rubTime i { display:block; height:100%; background:var(--pink); width:100%; }
+  #rubSwipe { position:absolute; font-size:30px; pointer-events:none; opacity:0; transition:opacity .2s; }
+  #rubStats { display:flex; justify-content:space-between; margin-top:6px; font-weight:700; }
+  #rubMsg { min-height:2.6em; font-weight:600; margin-top:4px; }
+
+  /* ---------- Rosie texts Dad ---------- */
+  #dadText { position:absolute; left:10px; top:10px; width:min(270px,74%); background:#f2f2f7; border-radius:18px; padding:8px 10px 10px; z-index:19;
+             box-shadow:0 8px 20px #0005; transform:translateY(-140%); transition:transform .4s cubic-bezier(.2,1.4,.5,1); pointer-events:none; font-size:14px; }
+  #dadText.show { transform:translateY(0); }
+  #dadText .hd { font-size:12px; font-weight:700; opacity:.65; text-align:center; margin-bottom:6px; }
+  #dadText .msg { background:#1f8bff; color:#fff; border-radius:16px 16px 4px 16px; padding:7px 11px; margin-left:16px; font-weight:600; }
+  #dadText .rep { background:#e1e1e6; color:#111; border-radius:16px 16px 16px 4px; padding:6px 11px; margin:6px 30px 0 0; font-weight:600; display:none; }
+  #dadText .rep.show { display:block; }
+  #dadText .typing { display:inline-block; background:#e1e1e6; border-radius:14px; padding:6px 12px; font-weight:700; letter-spacing:2px; }
+  #polaroid { position:fixed; top:14px; right:14px; width:min(220px,40vw); background:#fff; padding:7px 7px 10px; box-shadow:0 8px 20px #0004; transform:rotate(4deg) scale(.4); opacity:0; transition:all .35s; z-index:60; pointer-events:none; text-align:center; font-weight:600; font-size:13px; }
+  #polaroid.show { opacity:1; transform:rotate(4deg) scale(1); }
+  #polaroid img { width:100%; aspect-ratio:1; object-fit:cover; display:block; margin-bottom:6px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand"><div class="logo" aria-hidden="true">👑</div><h1>Rosie's Diva Daycare<small>Staff: you. Management: Rosie.</small></h1></div>
+    <div class="hud">
+      <div id="hudWeather">☀️ 72°F</div>
+      <div id="hudPoints">👑 0</div>
+      <div id="hudBest" title="Best score">🏆 0</div>
+      <div id="hudStrikes" title="Reports Rosie has sent to Dad">📱 0/3</div>
+      <button id="btnPause" title="Pause">⏸️</button>
+    </div>
+  </header>
+
+  <div class="meters">
+    <div class="meter"><span class="mi">🍖</span><div class="mm"><div class="ml">Tummy<b>0</b></div><div class="bar"><i id="mTummy"></i></div></div></div>
+    <div class="meter"><span class="mi">💖</span><div class="mm"><div class="ml">Diva mood<b>0</b></div><div class="bar"><i id="mHappy"></i></div></div></div>
+    <div class="meter"><span class="mi">🚽</span><div class="mm"><div class="ml">Potty<b>0</b></div><div class="bar"><i id="mPotty"></i></div></div></div>
+    <div class="meter"><span class="mi">🛋️</span><div class="mm"><div class="ml">Comfort<b>0</b></div><div class="bar"><i id="mComfort"></i></div></div></div>
+  </div>
+
+  <div id="scene" class="sunny">
+    <div class="sun"></div>
+    <div class="cloud" style="top:9%;left:31%"></div>
+    <div class="cloud" style="top:17%;left:53%;width:12%;animation-delay:-7s"></div>
+    <div class="cloud" style="top:5%;left:80%;width:10%;animation-delay:-3s"></div>
+    <div class="tree"><div class="canopy"></div></div>
+    <div class="ground"></div>
+    <div id="neighbors"></div>
+    <div class="fence"></div>
+    <div class="vine" style="left:34%;bottom:52%">🌿</div>
+    <div class="vine" style="left:52%;bottom:55%">🍃</div>
+    <div class="vine" style="left:92%;bottom:50%">🌿</div>
+    <div class="slab"></div>
+    <div class="shadow" style="left:61%;bottom:17.6%;width:28%"></div>
+    <div class="house"><div class="window"></div></div>
+    <div class="interior"><span class="lamp">🪴</span><span class="couch">🛋️</span></div>
+    <div class="mat"></div>
+    <div class="pumpkin">🎃</div>
+    <svg id="umbrella" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <line x1="100" y1="60" x2="100" y2="240" stroke="#555" stroke-width="5"/>
+      <path d="M8 82 Q100 -12 192 82 Q170 70 146 82 Q123 70 100 82 Q77 70 54 82 Q31 70 8 82Z" fill="#ff5fa8"/>
+      <path d="M54 82 Q62 20 100 6 Q80 30 77 76Z M146 82 Q138 20 100 6 Q120 30 123 76Z" fill="#fff" opacity=".55"/>
+      <circle cx="100" cy="6" r="5" fill="#ffc83d"/>
+    </svg>
+    <svg id="chair" class="chair-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="wicker" width="10" height="8" patternUnits="userSpaceOnUse">
+          <rect width="10" height="8" fill="#3d2519"/>
+          <rect x="1" y="1" width="8" height="2.4" rx="1.2" fill="#6e4530"/>
+          <rect x="1" y="4.6" width="3.5" height="2.4" rx="1.2" fill="#5c3826"/>
+          <rect x="5.5" y="4.6" width="3.5" height="2.4" rx="1.2" fill="#5c3826"/>
+        </pattern>
+      </defs>
+      <rect x="58" y="146" width="7" height="68" rx="3" fill="#1c1f22"/>
+      <rect x="135" y="146" width="7" height="68" rx="3" fill="#1c1f22"/>
+      <path d="M58 40 Q100 22 142 40 L142 128 L58 128 Z" fill="url(#wicker)" stroke="#2a1a12" stroke-width="2"/>
+      <path d="M38 124 L162 124 L156 152 L44 152 Z" fill="url(#wicker)" stroke="#2a1a12" stroke-width="2"/>
+      <rect x="44" y="140" width="112" height="14" rx="3" fill="#4a2e20"/>
+      <path d="M32 214 L32 128 Q28 70 52 42 Q100 6 148 42 Q172 70 168 128 L168 214" fill="none" stroke="#1c1f22" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M40 120 Q38 76 58 52" fill="none" stroke="#ffffff" stroke-width="2.5" opacity=".25" stroke-linecap="round"/>
+      <text x="100" y="18" text-anchor="middle" font-size="22">👑</text>
+    </svg>
+    <div id="leafLayer"></div>
+    <div id="rosie" class="rosie-wrap" style="left:66%;bottom:36%"></div>
+    <div id="glassDoor" title="The glass door"></div>
+    <div id="fx"></div>
+    <div id="wind"></div>
+    <div id="rubMeter">🤲 Rub that tummy! <div class="bar"><i id="rubBar" style="width:0"></i></div></div>
+    <div id="siren"></div>
+    <div id="cop">🚓👮<span id="copSays"></span></div>
+    <div id="note"></div>
+    <div id="bubble"></div>
+    <div id="veil">⏸️ Paused.<br>Rosie is judging you silently.</div>
+  </div>
+
+  <div class="actions">
+    <button class="act" id="btnFeed"><b>🥣</b>Feed</button>
+    <button class="act" id="btnMcd"><b>🍟</b>Not Yet</button>
+    <button class="act" id="btnWalk"><b>💩</b>Walk</button>
+    <button class="act" id="btnRub"><b>🤲</b>Tummy Rub</button>
+    <button class="act" id="btnLeaves"><b>🍂</b>Blow Leaves</button>
+    <button class="act" id="btnDoor"><b>🚪</b>Let In</button>
+    <button class="act" id="btnUmbrella"><b>☂️</b>Umbrella</button>
+    <button class="act" id="btnBlanket"><b>🧣</b>Blanket</button>
+    <button class="act" id="btnTreats"><b>🦴</b>Treats</button>
+  </div>
+</div>
+
+<div id="modal"><div class="card" id="modalCard"></div></div>
+<div id="polaroid"><img alt=""><div id="polaroidCap"></div></div>
+
+<script>
+/* =====================================================================
+   SETTINGS — tweak these freely
+   ===================================================================== */
+const CONFIG = {
+  MAX_REPORTS: 3,          // reports to Dad before game over
+  RUB_GOAL: 25,            // how much rubbing a full tummy rub takes
+  EVENT_GAP: [9, 16],      // calm seconds between demands (min, max)
+  SASS_EVERY: [5, 9],      // seconds between Rosie's comments while it's calm
+  REFRESH_EVERY: 240,      // seconds: treat jar refill, new boycott food, Dad forgives a report
+  SAUSAGE_COOLDOWN: 300,   // seconds between McDonald's cravings
+};
+const POTTY = { RATE: 0.4, ALERT: 28, UPSET_MULT: 2.4, UPSET_SECONDS: 45 };
+
+const PHOTOS = {
+  headshot: 'images/rosie.jpg', chair: 'images/chair.jpg', leaves: 'images/leaves.jpg', food: 'images/food.jpg',
+  harness: 'images/harness.jpg', carry: 'images/carry.jpg', umbrella: 'images/umbrella.jpg', blanket: 'images/blanket.jpg',
+  steak: 'images/steak.jpg', sausage: 'images/sausage.jpg', belly: 'images/belly.jpg', zoomies: 'images/zoomies.jpg',
+};
+const CAPTIONS = {
+  chair: 'The throne. Do not sit in it.', leaves: 'Her nemesis: the leaf blower.', food: 'Kibble is merely a plate for the meat.',
+  harness: 'Actual footage of the harness.', carry: 'Royalty does not walk.', umbrella: 'Umbrella service: approved.',
+  blanket: 'Tucked. Supervised. Spoiled.', steak: 'Her usual.', sausage: 'The sacred sausage.', belly: 'The position has been assumed.',
+  zoomies: 'Zoomies in progress.',
+};
+const loadedPhotos = {};
+Object.entries(PHOTOS).forEach(([k, src]) => { const im = new Image(); im.onload = () => { loadedPhotos[k] = src; }; im.src = src; });
+
+/* =====================================================================
+   Helpers
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = v => Math.max(0, Math.min(100, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+const scene = $('#scene'), rosie = $('#rosie'), bubble = $('#bubble');
+const SAVE_KEY = 'rosieDivaDaycareSave2', BEST_KEY = 'rosieDivaDaycareBest';
+const today = new Date();
+const isHalloween = today.getMonth() === 9 && today.getDate() === 31;
+
+let svgCount = 0;
+function rosieSVG() {
+  const id = 'plaid' + (++svgCount);
+  return `
+<svg class="rosie-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+  <defs><pattern id="${id}" width="24" height="24" patternUnits="userSpaceOnUse">
+    <rect width="24" height="24" fill="#7b5cc4"/><rect width="24" height="8" y="8" fill="#a68ae6" opacity=".8"/>
+    <rect width="8" height="24" x="8" fill="#a68ae6" opacity=".6"/><rect width="24" height="2" y="11" fill="#ffd84d" opacity=".8"/>
+  </pattern></defs>
+  <path d="M60 192 Q18 200 20 172 Q22 156 36 164" fill="none" stroke="#d48f50" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="100" cy="165" rx="50" ry="48" fill="#d99a5c"/>
+  <ellipse cx="100" cy="170" rx="24" ry="32" fill="#f6e7d3"/>
+  <rect x="74" y="166" width="17" height="48" rx="8" fill="#d99a5c"/>
+  <rect x="109" y="166" width="17" height="48" rx="8" fill="#d99a5c"/>
+  <ellipse cx="82" cy="212" rx="11" ry="6" fill="#f3dcc0"/>
+  <ellipse cx="118" cy="212" rx="11" ry="6" fill="#f3dcc0"/>
+  <g class="harness">
+    <path d="M54 148 Q100 174 146 148" stroke="#ff4fa0" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M58 184 Q100 202 142 184" stroke="#ff4fa0" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <rect x="92" y="152" width="16" height="40" rx="4" fill="#ff4fa0"/>
+    <circle cx="100" cy="158" r="6" fill="none" stroke="#c9c9c9" stroke-width="3"/>
+    <rect x="84" y="175" width="32" height="14" rx="3" fill="#ffd84d"/>
+    <text x="100" y="186" font-size="10" text-anchor="middle" font-weight="700" font-family="Fredoka, sans-serif" fill="#7a3b00">DIVA</text>
+  </g>
+  <g class="blanket">
+    <path d="M34 146 Q100 126 166 146 L174 218 Q100 228 26 218 Z" fill="url(#${id})" stroke="#5a3f9e" stroke-width="3"/>
+    <path d="M34 146 Q100 132 166 146 Q100 150 34 146Z" fill="#fff" opacity=".35"/>
+  </g>
+  <path d="M66 60 Q46 52 40 30 Q60 28 80 46 Z" fill="#d48f50"/>
+  <path d="M40 30 Q30 42 42 52 Q46 40 40 30Z" fill="#c07c42"/>
+  <path d="M66 56 Q54 48 50 38 Q62 38 74 48Z" fill="#f0b48a"/>
+  <path d="M134 60 Q154 52 160 30 Q140 28 120 46 Z" fill="#d48f50"/>
+  <path d="M160 30 Q170 42 158 52 Q154 40 160 30Z" fill="#c07c42"/>
+  <path d="M134 56 Q146 48 150 38 Q138 38 126 48Z" fill="#f0b48a"/>
+  <ellipse cx="100" cy="84" rx="50" ry="46" fill="#d99a5c"/>
+  <ellipse cx="78" cy="82" rx="17" ry="15" fill="#ecd9c0"/>
+  <ellipse cx="122" cy="82" rx="17" ry="15" fill="#ecd9c0"/>
+  <ellipse cx="100" cy="106" rx="25" ry="19" fill="#efe0cc"/>
+  <g class="eyes">
+    <circle cx="78" cy="82" r="12" fill="#1a1210"/><circle cx="122" cy="82" r="12" fill="#1a1210"/>
+    <circle cx="74" cy="77" r="4" fill="#fff"/><circle cx="118" cy="77" r="4" fill="#fff"/>
+    <circle cx="81" cy="87" r="1.6" fill="#fff"/><circle cx="125" cy="87" r="1.6" fill="#fff"/>
+  </g>
+  <g class="eyes-happy">
+    <path d="M66 86 Q78 72 90 86" stroke="#1a1210" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <path d="M110 86 Q122 72 134 86" stroke="#1a1210" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <ellipse cx="100" cy="99" rx="10" ry="7" fill="#3b302e"/>
+  <ellipse cx="97" cy="97" rx="3" ry="1.6" fill="#fff" opacity=".6"/>
+  <path class="tongue" d="M94 112 Q100 130 106 112Z" fill="#ff7f9a"/>
+  <ellipse class="howl-mouth" cx="100" cy="117" rx="8" ry="10" fill="#3a1d1d"/>
+  <path d="M91 112 Q100 119 109 112" stroke="#6b4a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <g class="shades">
+    <rect x="58" y="72" width="38" height="20" rx="9" fill="#111"/><rect x="104" y="72" width="38" height="20" rx="9" fill="#111"/>
+    <rect x="94" y="77" width="12" height="4" fill="#111"/>
+    <path d="M64 76 L74 76" stroke="#fff" stroke-width="3" opacity=".6" stroke-linecap="round"/>
+    <path d="M110 76 L120 76" stroke="#fff" stroke-width="3" opacity=".6" stroke-linecap="round"/>
+  </g>
+  <g class="hat">
+    <path d="M56 50 Q100 36 144 50 Q124 54 116 44 L104 -16 Q96 6 86 28 L84 44 Q76 54 56 50Z" fill="#5b2a86"/>
+    <path d="M85 38 Q100 32 115 38 L116 45 Q100 39 84 45Z" fill="#ff9f1c"/>
+  </g>
+</svg>`;
+}
+rosie.insertAdjacentHTML('beforeend', rosieSVG());
+
+const BLOWER_SVG = `<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+  <rect x="24" y="0" width="16" height="80" rx="7" fill="#1c1f22" transform="rotate(-12 32 40)"/>
+  <rect x="26" y="46" width="22" height="14" rx="4" fill="#2b2f33" transform="rotate(-12 32 40)"/>
+  <ellipse cx="62" cy="104" rx="38" ry="30" fill="#1c1f22"/>
+  <path d="M40 96 Q60 70 92 90 L84 104 Q62 88 48 106Z" fill="#f26a1b"/>
+  <circle cx="62" cy="108" r="12" fill="#2b2f33"/>
+</svg>`;
+
+/* =====================================================================
+   State
+   ===================================================================== */
+const S = { over: true, modalOpen: false, userPaused: false };
+const WEATHER = { sunny: { label: '☀️ 72°F' }, rainy: { label: '🌧️ 58°F' }, cold: { label: '🥶 34°F' } };
+const DAD_TEXTS = {
+  tummy: ["They are STARVING me. I can see my ribs. (I can't, but spiritually I can.) Send steak.",
+          "Day ??? of captivity. They feed me air. I am eating a leaf for sustenance.",
+          "Dad. Daddy. Father. I have not eaten in 4 minutes. This is a hunger strike I did NOT agree to."],
+  happy: ["Nobody has looked at me in AGES. I'm basically a ghost dog now. 👻",
+          "Your replacement is emotionally unavailable. I have attached a list of grievances. (47 pages)",
+          "I have been IGNORED. Me. ROSIE. Please advise on how to cope with this level of disrespect."],
+  comfort: ["Weather update: I'm suffering. Staff is useless. Wind chill: betrayal.",
+            "Sitting in the elements like a common lawn gnome. Thought you should know.",
+            "My fur is wet/cold/hot (circle all that apply). They did nothing. NOTHING."],
+  rub: ["They rubbed me the WRONG WAY. Literally. I'm filing for emancipation.",
+        "Belly rub was performed by an amateur. I said LEFT. They went UP. Who raised them??",
+        "I have been touched incorrectly. Requesting a new caretaker and a lawyer. 🐾⚖️",
+        "Rated their belly rub 0/10. Would not recommend. Calling Yelp next."],
+  howl: ["Hi, it's your neighbor. Rosie has been singing the song of her people for 20 minutes. Is she OK??",
+         "Your dog is howling like a wolf in a movie trailer. Who is watching her??"],
+  police: ["This is Officer Daniels. We responded to a noise complaint. Your dog would like to press charges against the dog-sitter.",
+           "Officer Daniels here. Rosie gave a statement. It was mostly howling, but we got the gist."],
+};
+const DAD_FROM = { howl: '🏡 Neighbor → Dad', police: '🚓 Officer Daniels → Dad' };
+const DAD_FINAL = ["Dad: That's it. We're coming home. 😤", "Dad: Mom is packing the suitcases. We're coming HOME.", "Dad: Turning the car around. Hang on, Rosie baby. 🚗💨", "Dad: Vacation's over. We're on our way home."];
+const TOPPINGS = {
+  steak:   { e: '🥩', name: 'steak' },
+  burger:  { e: '🍔', name: 'burger' },
+  chicken: { e: '🍗', name: 'chicken' },
+  pork:    { e: '🥓', name: 'pork' },
+  sausage: { e: '🌭', name: 'McD sausage' },
+};
+// the topping wheel. 🔥 slices mean you have to grill it yourself.
+const WHEEL = [
+  { k: 'steak', d: 28 }, { k: 'chicken', grill: 1, d: 44 }, { k: 'burger', d: 46 }, { k: 'none', d: 34 },
+  { k: 'steak', grill: 1, d: 40 }, { k: 'chicken', d: 46 }, { k: 'sausage', d: 20 }, { k: 'pork', d: 46 }, { k: 'burger', grill: 1, d: 56 },
+];
+const GRILL = { steak: { v: 80, pw: 12 }, burger: { v: 86, pw: 11 }, pork: { v: 90, pw: 10 }, chicken: { v: 98, pw: 9 } };
+const MEATS = ['burger', 'chicken', 'pork'];           // she might boycott one (never steak)
+const JAR = { cheese: 4, bacon: 2, bully: 1 };
+let zoomIv = null, rubTo = null, photoTo = null, howlFx = null;
+let rubCount = 0, rubDist = 0, rubDown = false, lastPt = null, zoomCatches = 0, lastPet = 0, lastPhoto = {};
+const sceneLeaves = [];
+const SAVE_FIELDS = ['time', 'tummy', 'happy', 'potty', 'comfort', 'strikes', 'points', 'loc', 'umbrella', 'blanket', 'weather',
+  'leaves', 'treats', 'bribes', 'hates', 'upset', 'badFood', 'badMeal', 'mcdNext', 'lastReport', 'lastWeather'];
+
+function baseState() {
+  return {
+    time: 0, tummy: 80, happy: 70, potty: 95, comfort: 85, strikes: 0, points: 0, loc: 'chair', umbrella: false, blanket: false,
+    weather: 'sunny', leaves: 0, treats: { ...JAR }, bribes: 0, hates: pick(MEATS), upset: 0, badFood: 0, badMeal: '',
+    mcdNext: 45, lastReport: 0, lastWeather: 0,
+  };
+}
+function startState(extra) {
+  clearTimers();
+  Object.assign(S, baseState(), extra || {}, { ev: null, busy: null, over: false, userPaused: false, cool: 10, sassIn: 4, atMat: false });
+  if (S.loc !== 'inside') S.loc = 'chair';
+  rosie.className = 'rosie-wrap';
+  clearSpeech();
+  $('#veil').classList.remove('show');
+  setWeather(S.weather);
+  renderLeaves();
+  updateAll();
+  closeModal();
+}
+function newGame() {
+  clearSave();
+  startState();
+  say(`I'm Rosie. You work for me now. Also, I'm boycotting ${S.hates} today. Don't ask why. It's personal.`);
+}
+function resumeGame(data) {
+  startState(data);
+  say(pick(["Oh. You're back. I've been waiting. Impatiently.", 'Where WERE you? I almost called Dad.', 'Finally. The staff has returned.']));
+}
+function snapshot() { const o = {}; SAVE_FIELDS.forEach(k => o[k] = S[k]); return o; }
+function save() { if (S.over) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot())); } catch (_) {} }
+function loadSave() { try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.tummy != null ? d : null; } catch (_) { return null; } }
+function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (_) {} }
+function best() { try { return +localStorage.getItem(BEST_KEY) || 0; } catch (_) { return 0; } }
+function saveBest() { try { if (S.points > best()) localStorage.setItem(BEST_KEY, S.points); } catch (_) {} }
+window.addEventListener('pagehide', save);
+
+function clearTimers() {
+  clearInterval(howlFx); howlFx = null;
+  clearInterval(zoomIv); clearTimeout(rubTo);
+  $('#rubMeter').classList.remove('show');
+  $('#siren').classList.remove('on');
+  $('#cop').classList.remove('in');
+  document.querySelectorAll('.neighbor').forEach(n => n.remove());
+}
+
+/* =====================================================================
+   Main loop
+   ===================================================================== */
+setInterval(tick, 1000);
+const outside = () => S.loc === 'chair' && !S.atMat;
+function isComfy() {
+  if (!outside()) return true;
+  if (S.weather === 'rainy') return S.umbrella;
+  if (S.weather === 'cold') return S.blanket;
+  return !S.blanket && !S.umbrella;
+}
+const pottyRate = () => POTTY.RATE * (S.upset > 0 ? POTTY.UPSET_MULT : 1);
+
+function tick() {
+  if (S.over || S.modalOpen || S.userPaused) return;
+  S.time++;
+  S.tummy -= 0.4;
+  S.potty -= pottyRate();
+  if (S.upset > 0) S.upset--;
+  S.happy -= 0.15;
+  if (S.leaves >= 6) S.happy -= (outside() ? 0.3 : 0.12) + S.leaves * 0.024;   // a buried throne is a mood KILLER
+  if (!outside()) S.comfort += (80 - S.comfort) * 0.08;
+  else if (isComfy()) S.comfort += 1.2;
+  else S.comfort -= S.weather === 'sunny' ? 1.2 : 2.2;
+  ['tummy', 'happy', 'potty', 'comfort'].forEach(k => S[k] = clamp(S[k]));
+  if (S.potty <= 0) { accident(); return; }
+
+  // things that used to happen "each day" now just roll around every few minutes
+  if (S.time % CONFIG.REFRESH_EVERY === 0) {
+    S.treats = { ...JAR };
+    S.hates = pick(MEATS.filter(m => m !== S.hates));
+    note(`🦴 Treat jar refilled. Rosie's new food boycott: ${S.hates}.`);
+  }
+  if (S.strikes > 0 && S.time - S.lastReport >= CONFIG.REFRESH_EVERY) {
+    S.strikes--; S.lastReport = S.time;
+    note('📸 Dad saw a cute photo of Rosie. One report forgiven.');
+  }
+
+  if (S.ev) eventTick();
+  else {
+    if (S.cool > 0) S.cool--;
+    director();
+    if (!S.ev && !S.busy && --S.sassIn <= 0) {
+      sayIdle(sass());
+      S.sassIn = Math.round(rand(...CONFIG.SASS_EVERY));
+    }
+  }
+  checkMeters();
+  if (S.time % 10 === 0) { save(); saveBest(); }
+  updateAll();
+}
+
+function checkMeters() {
+  for (const k of ['tummy', 'happy', 'comfort']) if (S[k] <= 0 && !S.over && !S.modalOpen) { startBribe(k); return; }
+}
+function reportToDad(k) {
+  if (k in CALL_REASON) S[k] = 35;
+  S.strikes++;
+  S.lastReport = S.time;
+  dadText(k, S.strikes >= CONFIG.MAX_REPORTS);
+  scene.classList.remove('jolt'); void scene.offsetWidth; scene.classList.add('jolt');
+  if (S.strikes >= CONFIG.MAX_REPORTS) { S.over = true; updateAll(); setTimeout(gameOver, 6500); return; }
+  updateAll();
+}
+
+// Rosie (or the neighbors, or the police) text Dad — a little phone slides down
+const dadQ = []; let dadBusy = false;
+function dadText(k, final) { dadQ.push({ k, final }); if (!dadBusy) nextDadText(); }
+function nextDadText() {
+  const item = dadQ.shift();
+  if (!item) { dadBusy = false; return; }
+  const { k, final } = item;
+  dadBusy = true;
+  let el = $('#dadText');
+  if (!el) { el = document.createElement('div'); el.id = 'dadText'; scene.appendChild(el); }
+  el.innerHTML = `<div class="hd">${DAD_FROM[k] || '📱 Rosie → Dad 👨'}</div><div class="msg"><span class="typing">• • •</span></div>${final ? `<div class="rep">${pick(DAD_FINAL)}</div>` : ''}`;
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => { el.querySelector('.msg').textContent = pick(DAD_TEXTS[k] || DAD_TEXTS.happy); }, 1100);
+  if (final) setTimeout(() => { const r = el.querySelector('.rep'); if (r) r.classList.add('show'); }, 3400);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(nextDadText, 500); }, final ? 8000 : 6000);
+}
+
+/* =====================================================================
+   EVENTS — one at a time, shown in Rosie's bubble (icon + line + clock).
+   Only while she's OUTSIDE. Inside, the only thing she does is ask to go out.
+   ===================================================================== */
+const EV_TIME = { weather: 10, gear: 9, wind: 12, out: 12, in: 12, hungry: 25, mcd: 25, rub: 15, zoom: 9, howl: 28 };
+const PANIC = {
+  sunny: ['The SUN is out and I am dressed for a BLIZZARD. Fix it.', 'Tanning hours are TICKING. Strip me.', "Sun's out. Gear off. Chop chop."],
+  rainy: ['Water. Is falling. On ME. Explain.', 'I am NOT a duck. Umbrella. NOW.', "It's raining on the QUEEN. This is a scandal."],
+  cold:  ["It's FREEZING. My toes are filing a complaint.", 'I can see my breath. That is a CRIME.', 'Blanket. Immediately. I am a delicate flower.'],
+};
+function gearNeeds() {
+  const n = [];
+  if (S.weather === 'sunny') {
+    if (S.umbrella) n.push({ id: 'btnUmbrella', icon: '☂️', label: 'down', fail: "The sun is OUT and I'm sitting in the shade like a mushroom." });
+    if (S.blanket) n.push({ id: 'btnBlanket', icon: '🧣', label: 'off', fail: "It's 72 degrees and I'm wrapped like a burrito." });
+  } else if (S.weather === 'rainy') {
+    if (!S.umbrella) n.push({ id: 'btnUmbrella', icon: '☂️', label: 'up', fail: "I'm SOAKED. I'm a wet napkin now. Thanks." });
+  } else if (!S.blanket) n.push({ id: 'btnBlanket', icon: '🧣', label: 'on', fail: "I'm a popsicle now. A tiny, furious popsicle." });
+  return n;
+}
+
+function director() {
+  if (S.busy) return;
+  if (S.loc === 'inside') {                                        // inside: she only ever asks to go out
+    if (S.time - (S.lastWeather || 0) > 40 && Math.random() < 0.05) { setWeather(pick(['sunny', 'rainy', 'cold'].filter(x => x !== S.weather))); S.lastWeather = S.time; }
+    if (S.potty <= POTTY.ALERT + 6 || (S.cool === 0 && S.time > 6 && Math.random() < 0.12)) startEvent('out');
+    return;
+  }
+  if (S.potty <= POTTY.ALERT) return startEvent('potty');
+  if (S.cool > 0 || S.time < 5) return;
+  if (S.tummy < 35) return startEvent('hungry');
+  if (outside() && !isComfy()) return startEvent('gear');
+  const opts = {
+    weather: S.time - (S.lastWeather || 0) > 28 ? 3.4 : 0,
+    wind: S.leaves < 10 ? 1.7 : 0,
+    in: 1,
+    hungry: S.tummy < 75 ? 1.2 : 0,
+    mcd: S.time >= S.mcdNext ? 1.6 : 0,
+    rub: 1.3,
+    zoom: 0.7,
+  };
+  const total = Object.values(opts).reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (const [k, w] of Object.entries(opts)) { r -= w; if (r <= 0 && w > 0) return startEvent(k); }
+}
+
+const EV_LINES = {
+  wind: ['A GUST?! My throne is BURIED. I am literally a salad now.', 'Who ordered a leaf storm? Not me. Never me.', 'Nature is attacking. Get the blower. Defend your queen.'],
+  out: ['Let me OUT. My chair misses me. I can hear it crying.', "I've been inside for HOURS. Minutes. Whatever. OPEN.", 'Door. Now. Please. (The please is sarcastic.)'],
+  in: ['Let me IN. I am an indoor dog now. It was decided.', 'Outside is overrated. Open up, peasant.', "Knock knock. It's royalty. Open the door."],
+  hungry: () => [`Feed me. And no ${S.hates}. I've made my position clear.`, "I'm wasting away. Look at me. I'm basically a rumor.", 'My stomach is writing a strongly worded letter.'],
+  mcd: ["McDonald's. SAUSAGE. The window is closing.", 'I can smell the drive-thru from here. GO.', 'Sausage o’clock. Do not make me ask twice.'],
+  rub: ['My tummy will not rub itself. Shocking, I know.', 'Belly. Up. Rub. Go. Why are you still reading this?', "Tummy rub o'clock. You're late."],
+  zoom: ["Catch me if you can! (You can't.)", 'ZOOM ZOOM. I am a race car.', "Can't stop. Won't stop. Tap me twice, coward."],
+  potty: ['I need to go. Like, NOW. This is not a drill.', 'Code brown. CODE BROWN.', "I'm doing the dance. You KNOW what the dance means."],
+};
+
+function startEvent(type, extra = {}) {
+  if (S.ev) return;
+  const ev = { type, left: EV_TIME[type] || 15, total: EV_TIME[type] || 15, t: 0, ...extra };
+  S.ev = ev;
+  if (type === 'weather') {
+    const w = pick(['sunny', 'rainy', 'cold'].filter(x => x !== S.weather));
+    setWeather(w);
+    S.lastWeather = S.time;
+    if (isComfy()) { S.ev = null; S.cool = 5; sayIdle(pick([`Weather changed. I was already dressed for it. Obviously.`, 'New weather. Same fabulous me.'])); return; }
+    ev.quote = pick(PANIC[w]);
+  } else if (type === 'gear') ev.quote = pick(PANIC[S.weather]);
+  else if (type === 'wind') {
+    scene.classList.add('windy');
+    const add = 40 - S.leaves;
+    for (let i = 0; i < add; i++) setTimeout(() => addSceneLeaf(true), i * 45);
+    S.leaves = 40;
+    setTimeout(() => scene.classList.remove('windy'), 3500);
+  } else if (type === 'in') S.atMat = true;
+  else if (type === 'out' && S.potty <= POTTY.ALERT + 6) ev.quote = 'Let me OUT. It is a POTTY situation. Do you understand me??';
+  else if (type === 'zoom') startZoomies();
+  else if (type === 'howl') { ev.quote = ev.why ? `AWOOOO! You ignored the door! Let me ${ev.why}!` : pick(['AWOOOOO! Nobody loves me!', 'AROOOO! This is a protest song.']); startHowlFx(); }
+  if (!ev.quote) { const l = EV_LINES[type]; ev.quote = pick(typeof l === 'function' ? l() : l); }
+  clearSpeech();
+  placeRosie();
+  renderEvent();
+}
+
+function eventTick() {
+  const ev = S.ev;
+  ev.t++;
+  if (ev.type === 'potty') { if (S.potty > POTTY.ALERT) return endEvent(true, true); return renderEvent(); }
+  if ((ev.type === 'weather' || ev.type === 'gear') && (!outside() || isComfy())) return endEvent(true);
+  if (ev.type === 'howl') {
+    if (ev.t % 4 === 0) neighborPop();
+    if (ev.t === 16) { reportToDad('howl'); if (S.over) return; }
+  }
+  if (S.busy && ev.type !== 'zoom') return renderEvent();
+  ev.left--;
+  if (ev.left <= 0) failEvent(); else renderEvent();
+}
+function endEvent(success, silent) {
+  const ev = S.ev;
+  if (!ev) return;
+  S.ev = null;
+  S.cool = Math.round(rand(...CONFIG.EVENT_GAP));
+  S.sassIn = Math.max(S.sassIn, 4);
+  if (ev.type === 'in') S.atMat = false;
+  if (ev.type === 'howl') stopHowlFx();
+  if (ev.type === 'mcd') S.mcdNext = S.time + CONFIG.SAUSAGE_COOLDOWN;
+  if (success && !silent) {
+    const pts = 15 + Math.max(0, ev.left) * 3;
+    S.points += pts;
+    S.happy = clamp(S.happy + 6);
+    floatPoints(pts);
+    hearts(3);
+  }
+  if (saying !== 'react') clearSpeech();
+  placeRosie();
+  renderEvent();
+}
+function failEvent() {
+  const ev = S.ev, t = ev.type;
+  if (t === 'out' || t === 'in') { S.ev = null; S.happy = clamp(S.happy - 6); return startEvent('howl', { why: t }); }
+  if (t === 'howl') { endEvent(false, true); return policeArrive(); }
+  if (t === 'zoom') return endZoomies(false);
+  endEvent(false, true);
+  S.happy = clamp(S.happy - 12);
+  S.points = Math.max(0, S.points - 10);
+  refuse();
+  if (t === 'weather' || t === 'gear') { S.comfort = clamp(S.comfort - 15); const n = gearNeeds(); say(n.length ? n[0].fail : 'Too slow.'); }
+  if (t === 'wind') say(pick(["I'm living in a compost pile. Thanks.", 'There is a leaf IN my ear. You did this.']));
+  if (t === 'hungry') say(pick(['I ate a sock out of spite. You did this.', "Fine. I'll just starve. Dramatically. On camera."]));
+  if (t === 'mcd') { S.happy = clamp(S.happy - 10); say(pick(['You let my sausage window CLOSE. Unforgivable.', "The sausage moment has PASSED. I'll never financially recover."])); }
+  if (t === 'rub') say(pick(['No rub? I see how it is.', 'My tummy remains un-rubbed. Noted. Reported.']));
+}
+
+/* what to show in her bubble for each event: [icon, buttonId, label] */
+function evButtons(ev) {
+  switch (ev.type) {
+    case 'weather': case 'gear': return gearNeeds().map(n => [n.icon, n.id, n.label]);
+    case 'wind': return [['🍂', 'btnLeaves', 'blow']];
+    case 'out': return [['🚪', 'btnDoor', 'let out']];
+    case 'in': return [['🚪', 'btnDoor', 'let in']];
+    case 'potty': return [['💩', 'btnWalk', 'walk']];
+    case 'hungry': return [['🥣', 'btnFeed', 'feed']];
+    case 'mcd': return [['🍟', 'btnMcd', 'sausage']];
+    case 'rub': return [['🤲', 'btnRub', 'rub']];
+    case 'zoom': return [['👆', 'zoomtap', 'tap me ×2']];
+    case 'howl': return [...(ev.why ? [['🚪', 'btnDoor', ev.why === 'out' ? 'let out' : 'let in']] : []), ['🤚', 'calm:pat', 'pat'], ['🤗', 'calm:hug', 'hug'], ['🤲', 'calm:rub', 'rub']];
+  }
+  return [];
+}
+const evSecondsLeft = ev => ev.type === 'potty' ? Math.max(0, Math.ceil(S.potty / pottyRate())) : Math.max(0, ev.left);
+const evFrac = ev => Math.max(0, Math.min(1, ev.type === 'potty' ? S.potty / POTTY.ALERT : ev.left / ev.total));
+
+let evSig = '';
+function renderEvent() {
+  document.querySelectorAll('.act').forEach(b => b.classList.remove('urgent'));
+  if (!S.ev || S.over) { if (bubble.classList.contains('need')) clearSpeech(); evSig = ''; return; }
+  const ev = S.ev, btns = evButtons(ev);
+  btns.forEach(([, id]) => { const el = document.getElementById(id); if (el && el.classList.contains('act')) el.classList.add('urgent'); });
+  if (saying === 'react') return;                   // a reaction is on screen; the event bubble comes back after
+  const sec = evSecondsLeft(ev);
+  const clock = `<span class="clock${sec <= 3 ? ' low' : ''}" style="--p:${Math.round(evFrac(ev) * 100)}"><b>${sec}</b></span>`;
+  const sig = ev.type + ev.quote + btns.map(b => b[1] + b[2]).join();
+  bubble.classList.add('show', 'need');
+  bubble.classList.toggle('urgent', ev.type === 'potty');
+  bubble.classList.toggle('howlb', ev.type === 'howl');
+  if (sig !== evSig) {
+    evSig = sig;
+    bubble.innerHTML = `<div class="need-row"><span class="q">${ev.quote}</span><span class="clk">${clock}</span></div>
+      <div class="need-btns">${btns.map(([icon, id, label]) => `<button data-do="${id}">${icon}<small>${label}</small></button>`).join('')}</div>`;
+    bubble.querySelectorAll('[data-do]').forEach(b => b.onclick = e => {
+      e.stopPropagation();
+      const id = b.dataset.do;
+      if (id.startsWith('calm:')) calm(id.slice(5));
+      else if (id === 'zoomtap') catchZoom();
+      else document.getElementById(id).click();
+    });
+  } else bubble.querySelector('.clk').innerHTML = clock;
+  if (!bubbleRaf) bubbleRaf = requestAnimationFrame(positionBubble);
+}
+
+/* =====================================================================
+   Potty accident = automatic fail
+   ===================================================================== */
+function upsetTummy() { S.upset = POTTY.UPSET_SECONDS; S.potty = clamp(S.potty - 8); }
+function accident() {
+  const where = S.loc === 'inside' ? 'right on the living room rug' : 'right on the porch, next to her throne';
+  endGame(`<h2>💩 AUTOMATIC FAIL</h2><div style="font-size:64px">💩</div>
+    <p>Rosie pooped <b>${where}</b>.</p><p>Then she texted Dad a photo. With a caption. And a filter.</p>`);
+}
+
+/* =====================================================================
+   Display
+   ===================================================================== */
+function setBar(id, v) {
+  const el = $(id), m = el.closest('.meter');
+  el.style.width = v + '%';
+  el.style.backgroundColor = v > 60 ? '#3fbf6a' : v > 30 ? '#ffb92e' : '#ff4f6d';
+  if (m) { m.querySelector('.ml b').textContent = Math.round(v); m.classList.toggle('low', v <= 25); }
+}
+function updateAll() {
+  setBar('#mTummy', S.tummy); setBar('#mHappy', S.happy); setBar('#mPotty', S.potty); setBar('#mComfort', S.comfort);
+  $('#hudWeather').textContent = WEATHER[S.weather].label;
+  $('#hudPoints').textContent = '👑 ' + S.points;
+  $('#hudBest').textContent = '🏆 ' + Math.max(best(), S.points || 0);
+  const hs = $('#hudStrikes');
+  hs.textContent = `📱 ${S.strikes}/${CONFIG.MAX_REPORTS}`;
+  hs.classList.toggle('warn', S.strikes === 1);
+  hs.classList.toggle('danger', S.strikes >= 2);
+  $('#btnDoor').innerHTML = S.loc === 'inside' ? '<b>🚪</b>Let Out' : '<b>🚪</b>Let In';
+  $('#btnUmbrella').classList.toggle('on', S.umbrella);
+  $('#btnBlanket').classList.toggle('on', S.blanket);
+  const asking = evIs('mcd'), mcd = $('#btnMcd');
+  mcd.disabled = !asking;
+  mcd.innerHTML = asking ? "<b>🍟</b>McD's NOW!" : '<b>🍟</b>Not Yet';
+  $('#btnPause').textContent = S.userPaused ? '▶️' : '⏸️';
+  $('#btnTreats').innerHTML = `<b>🦴</b>Treats (${treatCount()})`;
+  placeRosie();
+  renderEvent();
+}
+function placeRosie() {
+  rosie.classList.toggle('hat', !S.over && isHalloween);
+  if (S.busy === 'zoom') return;
+  const ev = S.ev || {}, inside = S.loc === 'inside';
+  S.atMat = !inside && (ev.type === 'in' || (ev.type === 'howl' && ev.why === 'in'));
+  const mat = S.atMat, chair = outside();
+  const [l, b] = inside ? ['6.5%', '30%'] : mat ? ['5.5%', '24%'] : ['66%', '36%'];
+  rosie.style.left = l; rosie.style.bottom = b;
+  rosie.classList.toggle('at-inside', inside);
+  rosie.classList.toggle('at-mat', mat);
+  rosie.classList.toggle('hidden-in', inside && !S.ev && S.busy !== 'rub');
+  rosie.classList.toggle('blanket', S.blanket && chair);
+  rosie.classList.toggle('shades', chair && S.weather === 'sunny');
+  rosie.classList.toggle('shiver', chair && S.weather === 'cold' && !S.blanket && S.busy !== 'rub');
+  rosie.classList.toggle('want', ev.type === 'out' || ev.type === 'in');
+  rosie.classList.toggle('dance', ev.type === 'potty' && S.busy !== 'rub');
+  rosie.classList.toggle('howl', ev.type === 'howl');
+  $('#umbrella').classList.toggle('on', S.umbrella);
+}
+function addSceneLeaf(windy) {
+  const el = document.createElement('div');
+  const tiny = Math.random() < 0.5;
+  el.className = 'leaf' + (tiny ? ' tiny' : '');
+  if (!tiny) el.textContent = pick(['🍂', '🍁', '🍂', '🍃']);
+  const x = 28 + Math.random() * 70, y = 2 + Math.random() * 26;
+  el.style.left = (windy ? 104 : x) + '%';
+  el.style.bottom = (windy ? rand(40, 95) : y) + '%';
+  el.style.transform = `rotate(${Math.random() * 360}deg)`;
+  $('#leafLayer').appendChild(el);
+  if (windy) { void el.offsetWidth; el.style.left = x + '%'; el.style.bottom = y + '%'; el.style.transform = `rotate(${Math.random() * 900}deg)`; }
+  sceneLeaves.push(el);
+}
+function renderLeaves() {
+  while (sceneLeaves.length > S.leaves) { const el = sceneLeaves.pop(); el.style.opacity = 0; el.style.left = '-10%'; setTimeout(() => el.remove(), 900); }
+  while (sceneLeaves.length < S.leaves) addSceneLeaf(false);
+}
+function setWeather(w) {
+  S.weather = w;
+  scene.classList.remove('sunny', 'rainy', 'cold');
+  scene.classList.add(w);
+  const fx = $('#fx'); fx.innerHTML = '';
+  if (w === 'rainy') for (let i = 0; i < 45; i++) {
+    const d = document.createElement('div'); d.className = 'drop'; d.style.left = Math.random() * 100 + '%';
+    d.style.animationDuration = 0.5 + Math.random() * 0.4 + 's'; d.style.animationDelay = -Math.random() + 's'; fx.appendChild(d);
+  } else if (w === 'cold') for (let i = 0; i < 26; i++) {
+    const f = document.createElement('div'); f.className = 'flake'; f.textContent = '❄'; f.style.left = Math.random() * 100 + '%';
+    f.style.fontSize = 10 + Math.random() * 12 + 'px'; f.style.animationDuration = 4 + Math.random() * 4 + 's'; f.style.animationDelay = -Math.random() * 6 + 's'; fx.appendChild(f);
+  }
+  const wind = $('#wind');
+  if (!wind.children.length) for (let i = 0; i < 9; i++) {
+    const g = document.createElement('div'); g.className = 'gust'; g.style.top = rand(5, 80) + '%';
+    g.style.animationDelay = -Math.random() * 1.1 + 's'; g.style.animationDuration = rand(0.7, 1.3) + 's'; wind.appendChild(g);
+  }
+  placeRosie();
+}
+
+/* ---------- bubble ---------- */
+let bubbleRaf = null, bubbleTo = null, saying = null;
+function positionBubble() {
+  if (!bubble.classList.contains('show')) { bubbleRaf = null; return; }
+  const sw = scene.clientWidth, w = bubble.offsetWidth, h = bubble.offsetHeight;
+  const cx = rosie.offsetLeft + rosie.offsetWidth / 2;
+  const left = Math.max(6, Math.min(sw - w - 6, cx - w / 2));
+  bubble.style.left = left + 'px';
+  bubble.style.top = Math.max(6, rosie.offsetTop - h - 12) + 'px';
+  bubble.style.setProperty('--arrow', Math.max(14, Math.min(w - 14, cx - left)) + 'px');
+  bubbleRaf = requestAnimationFrame(positionBubble);
+}
+function say(text, kind = 'react') {
+  if (kind === 'idle' && (saying || S.ev)) return;
+  clearTimeout(bubbleTo);
+  saying = kind;
+  bubble.classList.remove('need', 'urgent', 'howlb');
+  evSig = '';
+  bubble.textContent = text;
+  bubble.classList.add('show');
+  if (!bubbleRaf) bubbleRaf = requestAnimationFrame(positionBubble);
+  bubbleTo = setTimeout(() => { saying = null; bubble.classList.remove('show'); renderEvent(); }, Math.max(3800, 2600 + text.length * 70));
+}
+const sayIdle = t => say(t, 'idle');
+function clearSpeech() { clearTimeout(bubbleTo); saying = null; evSig = ''; bubble.classList.remove('show', 'need', 'urgent', 'howlb'); }
+
+/* little notes from the outside world (reports, police, refills) */
+const noteQ = [];
+let noteBusy = false;
+function note(text, ms = 4500) {
+  if (noteBusy) { if (noteQ.length < 3) noteQ.push([text, ms]); return; }
+  noteBusy = true;
+  const n = $('#note'); n.textContent = text; n.classList.add('show');
+  setTimeout(() => { n.classList.remove('show'); setTimeout(() => { noteBusy = false; if (noteQ.length) note(...noteQ.shift()); }, 350); }, ms);
+}
+
+function showPhoto(key) {
+  if (!loadedPhotos[key] || Date.now() - (lastPhoto[key] || 0) < 30000) return;
+  lastPhoto[key] = Date.now();
+  const p = $('#polaroid');
+  p.querySelector('img').src = loadedPhotos[key];
+  $('#polaroidCap').textContent = CAPTIONS[key] || '';
+  p.classList.add('show');
+  clearTimeout(photoTo);
+  photoTo = setTimeout(() => p.classList.remove('show'), 3500);
+}
+function hearts(n = 3, emoji = '💖') {
+  for (let i = 0; i < n; i++) {
+    const h = document.createElement('div'); h.className = 'float'; h.textContent = emoji;
+    h.style.left = rosie.offsetLeft + rosie.offsetWidth * Math.random() + 'px';
+    h.style.top = rosie.offsetTop + rosie.offsetHeight * 0.3 + 'px';
+    h.style.animationDelay = i * 0.12 + 's';
+    scene.appendChild(h); setTimeout(() => h.remove(), 1700);
+  }
+}
+function floatPoints(n) {
+  const h = document.createElement('div'); h.className = 'float';
+  h.style.fontWeight = '700'; h.style.color = n >= 0 ? '#2f9e44' : '#e03131'; h.style.textShadow = '0 2px 0 #fff';
+  h.textContent = (n >= 0 ? '+' : '') + n + ' 👑';
+  h.style.left = rosie.offsetLeft + rosie.offsetWidth * 0.3 + 'px'; h.style.top = rosie.offsetTop - 10 + 'px';
+  scene.appendChild(h); setTimeout(() => h.remove(), 1500);
+}
+function flashHappy(ms = 1800) { rosie.classList.add('happy'); setTimeout(() => { if (S.busy !== 'rub') rosie.classList.remove('happy'); }, ms); }
+function refuse() { rosie.classList.remove('refuse'); void rosie.offsetWidth; rosie.classList.add('refuse'); setTimeout(() => rosie.classList.remove('refuse'), 1100); }
+
+/* =====================================================================
+   THE SASS ENGINE — mixes openers, takes and sign-offs so she rarely repeats herself
+   ===================================================================== */
+const OPEN = ['Ugh.', 'Listen.', 'Excuse me.', 'Not to be dramatic, but', 'Hot take:', 'Breaking news:', 'Reminder:', 'Fun fact:',
+  'Honestly?', 'Sweetie.', 'Okay, so', 'Per my last bark,', 'With all due respect,', 'Hmm.', 'Wow.', 'Let me be clear:', 'Darling.',
+  'No offense, but', 'Just so we\'re clear,', 'Correction:', 'PSA:', 'Lowkey,', 'Between us,', 'For the record,', 'Babe.'];
+const TAKE = [
+  "I'm not spoiled. I'm correctly maintained.", "I'm small, but my expectations are enormous.", "I've had better service from a Roomba.",
+  'you call that a pet? I call that a light dusting.', "I don't bark at strangers. I bark at mediocrity.", "I'm not short. I'm fun-sized and fully litigious.",
+  'my love language is room service.', 'some dogs fetch. I delegate.', 'my resting face is not resting. It is judging you.',
+  'those are not begging eyes. Those are invoice eyes.', 'I could walk. I simply choose not to.', "I'm 100% diva and 0% sorry.",
+  "the neighbor's dog gets bacon. I'm just putting that out into the universe.", 'I was promised steak in my contract.',
+  "I'm basically a celebrity. Act like it.", "I'd help, but I'm decorative.", 'that face you just made? Noted. Filed. Forwarded to Dad.',
+  "I've seen squirrels with better time management.", "you're lucky you're cute. Wait. No. I'm the cute one.", 'I sneezed. Where is my get-well basket?',
+  'rate your service today out of ten. Wrong. It was a four.', "I'm not barking. I'm leaving a voice memo.", 'my bowl is empty. Emotionally.',
+  "I'm keeping a list. You're on it. Twice. In red.", 'every day I wake up and choose fabulous. You could try it sometime.',
+  "Mom lets me do whatever I want. You're not Mom.", "Dad texted to ask if you're 'doing okay.' I left him on read.",
+  'I have a very busy schedule of lying down. Please respect it.', 'my therapist is a squeaky toy and even SHE thinks you could do better.',
+  "I don't do mornings, afternoons, or effort.", "I'd roll my eyes, but they're too big. It'd take all day.", 'I am the main character. You are background staff.',
+  "I've decided you can stay. For now. Probationary period.", 'if I wanted your opinion, I would have barked for it.',
+  "this porch has a dress code and you're violating it.", "I'm not mad. I'm disappointed. Okay, I'm also mad.", "I didn't choose diva life. It chose me. I said yes.",
+  "your vibe is giving 'forgot the treats.'", "I'm one missed snack away from a full meltdown.", "I'm not ignoring you. I'm prioritizing myself.",
+  'my fur is naturally this luxurious. My attitude is also natural.', 'I have exactly two moods: fabulous and furious. Choose wisely.',
+  "the couch is mine. The chair is mine. The vibes are mine. You're borrowing air.", "I'd be nicer if you were more interesting.",
+  "I've been told I'm high maintenance. I prefer 'premium.'", 'my ancestors were sacred. I expect at least a little worship.',
+  "I don't sit on command. I sit on purpose.", 'I would describe your dog-sitting as "brave."', "if you're bored, you could always rub my tummy. Just saying.",
+  "I'm not a lap dog. I'm a lap QUEEN.", 'I tolerate you the way Mondays tolerate Tuesdays.', "your shoes smell like the neighbor's dog. Explain yourself.",
+  'I don\'t have a favorite person. I have a favorite chair.', "every nap I take is a power move.", 'I can smell steak from three ZIP codes away and none of them are here.',
+  "I've never seen the bottom of my food bowl and I don't intend to start now.", 'my bed has a bed. That\'s called standards.', "I don't have fleas. I have fans.",
+  "Mom calls me 'the princess.' I call it 'accurate.'", 'I get carried more than a designer handbag. Because I AM one.', "I've never worked a day in my life and I'm EXHAUSTED.",
+  'my hobbies include napping, judging, and being adored. In that order.', "I don't beg. I wait elegantly until you feel guilty.",
+  "my diet is 40% steak, 40% sausage, and 20% your guilt.", "I'd like to speak to the manager. Oh wait. I AM the manager.",
+  "I have a chair, a blanket, an umbrella, and STAFF. And somehow it's still not enough.", 'my paws have never touched a cold floor on purpose.',
+  'I am small. I am mighty. I am extremely expensive to maintain.', "Dad gave me steak ONE time and now that's just the standard. I don't make the rules. Yes I do.",
+  "if I wanted to be treated like a regular dog, I'd have been born a regular dog.", "I've been spoiled since birth. It's not a phase. It's a lifestyle.",
+  'I need a nap to recover from my last nap.', "I'm not needy. I'm high-touch.", "this gray muzzle isn't age. It's wisdom. And highlights.",
+  'my chair has better posture than you.', "I don't do stairs. Stairs exist so someone can carry me up them.", "I'm not dramatic. I'm cinematic.",
+  'every room I enter becomes my room. That\'s just physics.', "I deserve a parade. A small one. On the porch. Now.", 'the vet called me "a lot." I took it as a compliment.',
+  'I could survive in the wild for almost four minutes.', "I'm a chihuahua mix. The mix is attitude.", 'if spoiled is a crime, lock me up. In a heated room. With steak.',
+  'the blanket must be TUCKED, not draped. Draping is for amateurs.', 'my water bowl was room temperature this morning. ROOM. TEMPERATURE.',
+  'Mom hand-warms my food. Just saying. For reference.', "some dogs chase their tails. I have people for that.", "I'm not lazy. I'm conserving my sparkle.",
+  'when I sigh, the whole house should hear it. That\'s the point.', 'a queen never begs. A queen sends a memo.', "I said I wanted a 'little treat.' Little was sarcastic.",
+  "I'm allergic to effort. And to the word 'later.'", "I'd share my chair, but I'm sitting in it. Also no.", "I'm not barking at the mailman. I'm reviewing his performance.",
+  "Dad calls me 'his girl.' You may call me Your Majesty.", "you exist to serve and, frankly, you're understaffed.", 'my tail wag is not free. There is a fee.',
+  "I don't fetch. Things are brought to me.", "this is a five-star establishment and you're giving it two.", "I wake up, I'm adorable, I get fed. Why mess with a perfect system?",
+  "I'm not a morning dog or a night dog. I'm a whenever-I-feel-like-it dog.", 'my outfit is fur. It is couture. You would not understand.',
+  "I've been told I have expensive taste. I've also been told 'no.' Only one of those stuck.", "I'm the reason the treat jar has a lock. Allegedly.",
+  'I was carried across the porch earlier. Felt like a premiere.', "I don't hold grudges. I curate them.", 'that was not a bark. That was a press release.',
+  "my nails are done, my fur is fluffed, and my standards are unreachable.", "I'm not picky. I just know what I want, and it's steak, and it's now.",
+  "I've had a hard life. Once my blanket was slightly wrinkled.", "being this cute is a full-time job and I'm overdue for a raise.",
+];
+const SOLO = [
+  '*stares at you until you feel it*', '*sighs loud enough for the neighbors*', '*adjusts in chair like a tiny CEO*', 'Dear Diary: the help is struggling today.',
+  'Daily affirmation: I am perfect. Everyone else is a work in progress.', '*pretends not to notice you. Notices you.*',
+  "Hello, customer service? I'd like to file a complaint about… everything.", 'Note to self: be fabulous. …Oh wait. It\'s automatic.',
+  'Me? Spoiled? *glances at chair, blanket, umbrella, steak* …Okay. A little.', "I'm a delicate flower. A delicate flower with OPINIONS.",
+  '*yawns so wide the whole porch sees her tonsils*', "Some call it high maintenance. I call it quality control.", "Five stars for this chair. Two for the staff.",
+  '*sniffs the air* I smell… someone who is not giving me treats.', "Just practicing my disappointed face. It's for you. How's it looking?",
+  'Breaking: Local diva still fabulous. More at eleven.', 'Squirrel. SQUIRREL. …Never mind. Beneath me.', 'Every leaf that falls is a personal attack. Remember that.',
+  '*poses* Take the picture. TAKE IT. Send it to Mom.', "I'm not ignoring you. I'm letting you earn my attention.", '*slow, judgmental tail wag*',
+  "Ugh. I'm so spoiled it's exhausting. Somebody fan me.", "If I'm quiet, I'm plotting. If I'm loud, I'm reporting.", '*lifts one paw* Kiss the ring. Kidding. Unless…',
+];
+const DIVA_RULES = [
+  'The chair is mine even when I\'m not in it.', 'Meat goes ON the kibble. Never beside. Never "later."', 'If I\'m carried, walk slower. I\'m sightseeing.',
+  'Belly rubs end when I say. I will never say.', 'If it rains on me, someone is fired.', 'Blankets are tucked, never draped.', 'Leaves on my porch are an act of war.',
+  'Dad is always on speed dial.', "Treats aren't rewards. They're taxes.", 'No eye contact during naps. I can feel it.', 'If I sit down on a walk, the walk is over.',
+  'Sausage requests are non-negotiable and time-sensitive.', 'Steak counts as a vegetable if I say so.', 'Compliments are due hourly. Minimum.',
+  'The good couch spot is not for staff.', 'Anything that falls on the floor is mine. Including your dignity.', 'I am never "just a dog."',
+];
+const DEMANDS = ['a heated seat cushion', 'a personal chef', 'a velvet rope around my chair', 'hand-shredded rotisserie chicken', 'a tiny crown. A REAL one.',
+  'someone to fan me', 'a red carpet to my food bowl', 'a paw massage', 'a blanket still warm from the dryer', 'my own room service bell', 'a bodyguard for walks',
+  'an oil portrait of myself', 'a second chair for my second mood', 'a sausage delivered by a waiter in a tiny tuxedo', 'a 24-hour steak hotline', 'a thank-you note for my presence'];
+const WHEN = ['immediately', 'by sundown', 'before Dad gets home', 'on a silver platter', 'with a bow on it', 'yesterday, ideally', 'and make it snappy', 'and this time with feeling'];
+const CLOSE = ['Write that down.', 'Dad will hear about this.', "You're welcome.", '*hair flip*', 'I said what I said.', '💅', 'Moving on.', 'Anyway.',
+  'Do better.', 'This is not a negotiation.', '*yawns directly at you*', 'Next.', 'Mm-hm.', 'Noted.', 'Kisses. Not for you.', 'Respectfully.',
+  'Thank you for coming to my TED talk.', 'Discuss.', 'Bye.', 'Iconic, I know.', 'Periodt.', "Don't make it weird.", '*slow blink*', 'Ciao.'];
+const recentTakes = [];
+function contextTakes() {
+  const t = [];
+  if (S.loc === 'inside') t.push("I'm napping. Do not perceive me.", 'indoor life is so… beige.', "the couch has a me-shaped dent now. You're welcome.");
+  else if (S.weather === 'sunny') t.push('basking. Do not disturb the queen.', 'sun on my face, peasant in my eyeline. Can\'t have everything.', 'this chair is my throne. Admire it from over there.');
+  else if (S.weather === 'rainy') t.push('pitter patter. Not on ME though. As it should be.', 'umbrella service is… adequate. Two stars.');
+  else t.push('tuck me in tighter, peasant.', 'cozy. Acceptable. Barely.');
+  if (S.leaves >= 10) t.push('there are LEAVES near my throne. Disgusting.', "it's a compost heap out here. A ROYAL compost heap.");
+  if (S.upset > 0) t.push("that food is NOT sitting right. You've been warned.", 'my tummy is making noises. Angry, judgmental noises.');
+  if (S.tummy < 45) t.push("I haven't eaten in MINUTES. Dad will hear about this.", "I'm so hungry I could eat a whole sausage. Hint.");
+  if (S.strikes > 0) t.push(`you have ${S.strikes} report${S.strikes > 1 ? 's' : ''} with Dad. Ambitious.`, 'Dad and I are in a group chat. About you.');
+  if (S.points > 0) t.push(`${S.points} diva points? Cute. I have infinite.`, `you're at ${S.points} points. I'd say "good job," but I don't lie.`);
+  t.push(`and I'm still boycotting ${S.hates}. Don't test me.`);
+  if (isHalloween) t.push("I'm a witch. Obviously. I've always been a witch.", 'trick or treat. Mostly treat. Actually only treat.');
+  return t;
+}
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function fresh(list) { const p = list.filter(t => !recentTakes.includes(t)); const t = pick(p.length ? p : list); recentTakes.push(t); if (recentTakes.length > 40) recentTakes.shift(); return t; }
+function sass() {
+  const r0 = Math.random();
+  if (r0 < 0.12) {
+    const d = fresh(DEMANDS), w = pick(WHEN);
+    return pick([`Today's demand: ${d}, ${w}.`, `Adding ${d} to my rider. It is not optional.`, `I've decided I need ${d}. ${cap(w)}.`, `Dear staff: please arrange ${d}, ${w}. Kisses, Rosie. 💋`]);
+  }
+  if (r0 < 0.24) return `Diva Rule #${Math.floor(rand(1, 99))}: ${fresh(DIVA_RULES)}`;
+  if (r0 < 0.38) return fresh(SOLO);
+  const pool = [...TAKE, ...contextTakes(), ...contextTakes()].filter(t => !recentTakes.includes(t));
+  const take = pick(pool);
+  recentTakes.push(take); if (recentTakes.length > 40) recentTakes.shift();
+  const r = Math.random();
+  const open = r < 0.55 ? pick(OPEN) : '';
+  const close = Math.random() < 0.45 ? pick(CLOSE) : '';
+  const joins = /[a-z,:]$/.test(open);                      // "Not to be dramatic, but" + lowercase take
+  let body = joins ? (/^(I\b|I'|Mom|Dad|Rosie)/.test(take) ? take : take.charAt(0).toLowerCase() + take.slice(1)) : cap(take);
+  return [open, body, close].filter(Boolean).join(' ');
+}
+
+/* =====================================================================
+   Modal + guards
+   ===================================================================== */
+function openModal(html, cls) { S.modalOpen = true; const c = $('#modalCard'); c.className = 'card' + (cls ? ' ' + cls : ''); c.innerHTML = html; c.scrollTop = 0; $('#modal').classList.add('show'); }
+function closeModal() { S.modalOpen = false; $('#modal').classList.remove('show'); }
+const evIs = t => S.ev && S.ev.type === t;
+function blocked() {
+  if (S.over) return true;
+  if (S.userPaused) { note('Unpause first. Rosie is still judging.'); return true; }
+  if (S.busy === 'zoom') { note("She's zooming! Tap her twice to catch her."); return true; }
+  if (S.busy === 'rub') { note("Mid-rub! Don't you DARE stop."); return true; }
+  if (evIs('howl')) { note("She's howling! Use the buttons in her bubble."); return true; }
+  return false;
+}
+function needsOutside(what) {
+  if (S.loc === 'inside') { say(pick([`${what}? Inside? I don't do ${what.toLowerCase()} indoors. Let me OUT first.`, "Not in here. Outside. That's where the magic happens."])); return true; }
+  return false;
+}
+
+/* =====================================================================
+   FEED: pour the kibble (hold to pour, stop in the green), then pick a topping
+   ===================================================================== */
+$('#btnFeed').onclick = () => {
+  if (blocked() || needsOutside('Dinner')) return;
+  const lo = Math.round(rand(40, 62)), hi = lo + 14;
+  openModal(`<h2>🥣 Fill the Bowl</h2>
+    <p class="small">Hold <b>Pour</b> (or the Space bar) and let go when the kibble is in the <b style="color:#2f9e44">green zone</b>.<br>Too little and she's insulted. Too much and… consequences.</p>
+    <div id="pourArea"><div id="bag"><svg viewBox="0 0 80 100" width="70"><path d="M14 18 L66 18 L72 96 L8 96 Z" fill="#c0392b"/><path d="M14 18 L66 18 L62 6 L18 6 Z" fill="#a93226"/><rect x="18" y="40" width="44" height="30" rx="5" fill="#fff6e0"/><text x="40" y="53" text-anchor="middle" font-size="9" font-weight="700" fill="#7a3b00" font-family="Fredoka, sans-serif">KIBBLE</text><text x="40" y="66" text-anchor="middle" font-size="11">🦴</text></svg></div><div id="bowl"><div id="zone" style="bottom:${lo}%;height:${hi - lo}%"></div><div id="fill"></div></div><div id="overflow">🟤🟤🟤🟤🟤🟤🟤🟤</div></div>
+    <button class="big" id="pourBtn">🫗 Hold to Pour</button>
+    <p id="pourMsg" class="small">&nbsp;</p>`);
+  const area = $('#pourArea'), fill = $('#fill'), bag = $('#bag'), btn = $('#pourBtn');
+  let level = 0, pouring = false, held = 0, done = false, last = performance.now(), raf, kibT = 0;
+  function frame(now) {
+    if (done) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (pouring) {
+      held += dt;
+      level += (14 + held * 38) * dt;          // it speeds up the longer you hold
+      kibT -= dt;
+      if (kibT <= 0) {
+        kibT = 0.03;
+        const k = document.createElement('div'); k.className = 'kib';
+        k.style.left = `calc(50% + ${rand(-14, 14)}px)`;
+        area.appendChild(k); setTimeout(() => k.remove(), 460);
+      }
+      if (level >= 100) { level = 100; stop(); }
+    }
+    fill.style.height = Math.min(100, level) + '%';
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+  const start = e => { if (e) e.preventDefault(); if (done || level > 0 && !pouring && held > 0) return; pouring = true; bag.classList.add('tilt'); };
+  const stop = () => { if (!pouring || done) return; pouring = false; done = true; bag.classList.remove('tilt'); setTimeout(() => judge(), 450); };
+  btn.addEventListener('pointerdown', start);
+  btn.addEventListener('pointerup', stop);
+  btn.addEventListener('pointerleave', stop);
+  const kd = e => { if (e.code === 'Space') { e.preventDefault(); if (!e.repeat) start(); } };
+  const ku = e => { if (e.code === 'Space') { e.preventDefault(); stop(); } };
+  document.addEventListener('keydown', kd); document.addEventListener('keyup', ku);
+
+  function judge() {
+    cancelAnimationFrame(raf);
+    document.removeEventListener('keydown', kd); document.removeEventListener('keyup', ku);
+    let r;
+    if (level >= 99) { r = 'avalanche'; $('#overflow').style.opacity = 1; }
+    else if (level > hi) r = 'much';
+    else if (level >= lo) r = Math.abs(level - (lo + hi) / 2) < 2.5 ? 'bullseye' : 'right';
+    else r = 'little';
+    const RESULT = {
+      little: pick(['Is this a SAMPLE? I asked for dinner, not a tasting menu.', "Eleven kibbles. I counted. I'm telling Dad.", "I've seen bigger portions at a doll tea party."]),
+      right: pick(['Acceptable portion. You may live.', 'That is… correct. How unexpected of you.']),
+      bullseye: pick(['PERFECT portion. I am almost impressed. Almost.', 'Chef\'s kiss. Exactly the right amount of crunch.']),
+      much: pick(["That's a lot. I'm going to eat ALL of it and then lie on my back like a tipped-over sausage.", "Are you trying to turn me into a loaf? Because it's working.", "I'll eat it. Then I'll regret it. Then YOU'LL regret it."]),
+      avalanche: pick(['KIBBLE AVALANCHE. It is on the floor, the rug, and somehow the ceiling.', "You poured the whole bag. I'm eating it off the floor out of spite."]),
+    }[r];
+    $('#pourMsg').innerHTML = `<b>Rosie:</b> "${RESULT}"`;
+    btn.remove();
+    setTimeout(() => { area.classList.add('gone'); const intro = $('#modalCard .small'); if (intro && intro.id !== 'pourMsg') intro.style.display = 'none'; setTimeout(() => { const st = $('#wheelStage'); if (st) st.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 480); }, 900);
+    const area2 = document.createElement('div');
+    area2.innerHTML = `<h2 style="margin-top:12px">🎡 Topping Roulette</h2><p class="small">Hit STOP. 🔥 means you grill it yourself. 🙄 is today's boycott.</p>
+      <div id="wheelStage"><div id="wheelWrap"><div id="wheel"></div><div id="wheelHub">👑</div></div>
+        <svg id="wheelPtr" viewBox="0 0 36 46"><path d="M18 44 L3 9 Q18 -3 33 9 Z" fill="#ff3b6b" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><circle cx="18" cy="12" r="4.5" fill="#ffd23d"/></svg>
+        <div id="wheelBurst"></div></div>
+      <p id="wheelMsg">&nbsp;</p>
+      <button class="big" id="wheelStop" disabled>🎡 Spinning…</button>`;
+    $('#modalCard').appendChild(area2);
+    spinWheel(slice => {
+      if (slice.grill) runGrill(slice.k, g => serve(r, slice.k, g));
+      else serve(r, slice.k);
+    });
+  }
+  function serve(r, top, grill) {
+    closeModal();
+    const P = { little: [15, -10, 0], right: [45, 12, 25], bullseye: [50, 18, 40], much: [60, 4, 5], avalanche: [65, -8, -10] }[r];
+    S.tummy = clamp(S.tummy + P[0]);
+    S.happy = clamp(S.happy + P[1]);
+    let pts = P[2], line = '', bad = 0;
+    if (r === 'much' || r === 'avalanche') { upsetTummy(); bad += r === 'much' ? 1 : 2; }
+    if (top === 'none') { S.happy = clamp(S.happy - 8); bad += 1; line = pick(['Naked kibble. In THIS house?', 'No topping. Bold. Wrong, but bold.']); }
+    else if (top === S.hates) { upsetTummy(); bad += 1; S.happy = clamp(S.happy - 6); pts -= 10; line = `I SAID no ${S.hates}. My tummy will be expressing its feelings shortly.`; }
+    else if (top === 'sausage') { S.happy = clamp(S.happy + 15); pts += 25; line = pick(['JACKPOT. A sausage ON my dinner?! I take back 30% of the mean things I said.', 'A SAUSAGE. On a TUESDAY. (I don\'t know what day it is. I don\'t care.)']); }
+    else if (top === 'steak') { S.happy = clamp(S.happy + 10); pts += 10; line = pick(['STEAK. Finally, someone who understands me.', 'Steak. See? Was that so hard? Don\'t answer.']); }
+    else line = pick([`${cap(TOPPINGS[top].name)}. I'll allow it.`, `${cap(TOPPINGS[top].name)}? Fine. Adequate. Next time, steak.`]);
+    if (grill === 'raw') { upsetTummy(); bad += 2; pts -= 12; S.happy = clamp(S.happy - 6); line = pick([`This ${TOPPINGS[top].name} is still MOOING. Or clucking. Either way, my tummy is about to file a complaint.`, `RAW?! I'm a chihuahua, not a wolf. My tummy has entered the chat.`]); }
+    else if (grill === 'burnt') { bad += 1; pts -= 10; S.happy = clamp(S.happy - 8); line = pick([`Charcoal. You served me CHARCOAL. I'm not a grill, I'm a lady.`, `This ${TOPPINGS[top].name} has been cremated. Should we say a few words?`]); }
+    else if (grill === 'perfect') { pts += 20; S.happy = clamp(S.happy + 8); line = pick([`Grilled to PERFECTION. Who ARE you? …Dad is being replaced.`, `Perfect sear. Juicy. I would leave a five-star review if I could hold a pen.`]); }
+    else if (grill === 'ok') { pts += 5; line = `${cap(TOPPINGS[top].name)}, grilled… acceptably. Gordon Ramsay would have notes. So do I.`; }
+    if (bad) { S.badFood = (S.badFood || 0) + bad; S.badMeal = grill === 'raw' ? `raw ${TOPPINGS[top].name}` : grill === 'burnt' ? `burnt ${TOPPINGS[top].name}` : r === 'avalanche' ? 'kibble avalanche' : r === 'much' ? 'giant mountain of kibble' : top === S.hates ? `${S.hates} she was boycotting` : 'naked kibble'; }
+    S.points = Math.max(0, S.points + pts);
+    if (pts) floatPoints(pts);
+    const good = (r === 'right' || r === 'bullseye') && top !== S.hates && top !== 'none' && grill !== 'raw' && grill !== 'burnt';
+    if (evIs('hungry')) endEvent(r !== 'little', r === 'little');
+    if (good) { flashHappy(2000); hearts(4, top === 'none' ? '🥣' : TOPPINGS[top].e); showPhoto(top === 'steak' && loadedPhotos.steak ? 'steak' : 'food'); }
+    else refuse();
+    say(r === 'little' ? 'Still. Starving. You saw how much that was.' : r === 'much' || r === 'avalanche' ? `${line} Also I'm now a bloated sausage. Walk me soon or else.` : line);
+    updateAll();
+  }
+};
+
+function spinWheel(done) {
+  const wrap = $('#wheelWrap'), wheel = $('#wheel'), msg = $('#wheelMsg'), btn = $('#wheelStop'), ptr = $('#wheelPtr'), stage = $('#wheelStage'), card = $('#modalCard');
+  const COLORS = ['#ffd84d', '#ff9fc8', '#8fe0a0', '#9cc8ff', '#ffbf80', '#d2b4ff'];
+  let a = 0, grad = [], labels = '';
+  const slices = WHEEL.map((w, i) => {
+    const sl = { ...w, from: a, to: a + w.d, hate: w.k === S.hates };
+    const col = w.k === 'none' ? '#e2e2e2' : sl.hate ? '#a7a3b0' : w.k === 'sausage' ? '#ffcf3a' : w.grill ? '#ff8a5c' : COLORS[i % COLORS.length];
+    grad.push(`${col} ${a}deg ${a + w.d}deg`);
+    const mid = a + w.d / 2, e = w.k === 'none' ? '😐' : TOPPINGS[w.k].e;
+    labels += `<div class="sl" style="transform:translate(-50%,-50%) rotate(${mid}deg) translateY(-80px)">${w.grill ? '🔥' : ''}${e}${sl.hate ? '<small>🙄</small>' : ''}</div>`;
+    a += w.d;
+    return sl;
+  });
+  // slice colors + thin white dividers
+  wheel.style.backgroundImage = `conic-gradient(${slices.map(sl => `#fff0 ${sl.from + 0.8}deg ${sl.to}deg, #fffc ${sl.to}deg ${sl.to + 0.8}deg`).join(',')}), conic-gradient(${grad.join(',')})`;
+  wheel.innerHTML = labels;
+  for (let i = 0; i < 20; i++) {
+    const b = document.createElement('i'); b.className = 'bulb';
+    const ang = i / 20 * Math.PI * 2;
+    b.style.left = `calc(50% + ${Math.cos(ang) * 127}px)`; b.style.top = `calc(50% + ${Math.sin(ang) * 127}px)`;
+    wrap.appendChild(b);
+  }
+  wrap.classList.add('fast', 'blur');
+  let rot = rand(0, 360), t = 0, last = performance.now(), stopping = null, raf, lastIdx = -1, ready = false;
+  const cruise = tt => 330 + 120 * Math.sin(tt * 2.1);           // it wobbles, so you can't just count
+  const speedAt = tt => tt < 0.5 ? 1500 * (tt / 0.5) : tt < 1.4 ? 1500 + (cruise(tt) - 1500) * ((tt - 0.5) / 0.9) : cruise(tt);
+  const idxAt = r => { const at = ((360 - r % 360) % 360 + 360) % 360; return slices.findIndex(s => at >= s.from && at < s.to); };
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+    if (!stopping) {
+      rot += speedAt(t) * dt;
+      if (!ready && t >= 1.4) { ready = true; btn.disabled = false; btn.textContent = '🛑 STOP'; wrap.classList.remove('blur', 'fast'); }
+    } else {
+      stopping.e += dt;
+      const p = Math.min(1, stopping.e / stopping.T);
+      rot = stopping.r0 + stopping.D * (1 - Math.pow(1 - p, 3));
+      if (p >= 1) { wheel.style.transform = `rotate(${rot}deg)`; return land(); }
+    }
+    wheel.style.transform = `rotate(${rot}deg)`;
+    const idx = idxAt(rot);
+    if (idx !== lastIdx) { lastIdx = idx; ptr.classList.remove('tick'); ptr.getBoundingClientRect(); ptr.classList.add('tick'); }
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+  const stop = e => {
+    if (e) e.preventDefault();
+    if (stopping || !ready) return;
+    const v = speedAt(t), D = rand(95, 125);
+    stopping = { r0: rot, D, T: 3 * D / v, e: 0 };
+    btn.disabled = true; btn.textContent = '🥁 …';
+    wrap.classList.add('fast');
+    msg.innerHTML = '<span class="drum">🥁 drrrrrrrr…</span>';
+  };
+  btn.onclick = stop;
+  const kd = e => { if (e.code === 'Space') stop(e); };
+  document.addEventListener('keydown', kd);
+
+  function confetti(list, n, up) {
+    for (let i = 0; i < n; i++) {
+      const c = document.createElement('div'); c.className = 'conf'; c.textContent = pick(list);
+      const ang = up ? rand(-Math.PI * 0.9, -Math.PI * 0.1) : rand(0, Math.PI * 2), dist = rand(90, 190);
+      c.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
+      c.style.setProperty('--dy', Math.sin(ang) * dist + (up ? 0 : 40) + 'px');
+      c.style.setProperty('--r', rand(-360, 360) + 'deg');
+      c.style.fontSize = rand(16, 30) + 'px';
+      c.style.animationDelay = rand(0, 0.25) + 's';
+      stage.appendChild(c); setTimeout(() => c.remove(), 1900);
+    }
+  }
+  function land() {
+    cancelAnimationFrame(raf);
+    document.removeEventListener('keydown', kd);
+    const sl = slices[idxAt(rot)] || slices[0];
+    btn.remove();
+    wrap.classList.remove('fast', 'blur');
+    wrap.classList.add('landed');
+    const name = sl.k === 'none' ? '' : TOPPINGS[sl.k].name, e = sl.k === 'none' ? '😐' : TOPPINGS[sl.k].e;
+    let kind, title, sub, burst, n = 26, up = false;
+    if (sl.k === 'none') { kind = 'none'; title = 'Nothing.'; sub = 'Plain kibble. She is horrified.'; burst = ['💨', '😐', '🦗']; n = 10; }
+    else if (sl.k === 'sausage') { kind = 'jackpot'; title = 'JACKPOT!'; sub = 'A McD sausage topper!'; burst = ['🌭', '⭐', '✨', '👑', '💰']; n = 44; }
+    else if (sl.hate) { kind = 'hate'; title = `${cap(name)}?!`; sub = "The one she's BOYCOTTING."; burst = ['🙄', '💢', '👎', '😤']; }
+    else if (sl.grill) { kind = 'grill'; title = 'GRILL TIME!'; sub = `Cook the ${name} yourself.`; burst = ['🔥', '🔥', '💥', '♨️']; n = 34; up = true; }
+    else { kind = 'plain'; title = `${cap(name)}!`; sub = pick(['Chef\'s choice.', 'The wheel has spoken.', 'Diva-approved. Probably.']); burst = [e, e, '✨', '💖']; }
+    $('#wheelBurst').innerHTML = `<div class="wb-card ${kind}"><span class="e">${sl.grill ? '🔥' : ''}${e}</span><b>${title}</b><span>${sub}</span></div>`;
+    confetti(burst, n, up);
+    card.classList.remove('shake', 'flash-gold'); void card.offsetWidth;
+    if (kind === 'hate' || kind === 'none') card.classList.add('shake');
+    if (kind === 'jackpot' || kind === 'grill') card.classList.add('flash-gold');
+    msg.innerHTML = { none: '<b>Rosie:</b> "Is this a JOKE? Spin it again. …What do you mean, no?"', jackpot: '<b>Rosie:</b> "SAUSAGE?! I take back three of my complaints."',
+      hate: `<b>Rosie:</b> "${cap(name)}. On MY plate. After I made my position CLEAR."`, grill: `<b>Rosie:</b> "Grill it yourself? Don't you DARE serve it raw."`,
+      plain: `<b>Rosie:</b> "${sl.k === 'steak' ? 'STEAK. The wheel KNOWS me.' : pick([`${cap(name)}. I'll allow it.`, `${cap(name)}. Fine. Acceptable. Not steak, but acceptable.`])}"` }[kind];
+    setTimeout(() => done(sl), kind === 'jackpot' ? 2600 : 2200);
+  }
+}
+
+// GRILL: needle swings raw → burnt and back. Stop it in PERFECT. Twice (flip!). Watch for flare-ups.
+function runGrill(meat, done) {
+  const g = GRILL[meat] || GRILL.burger, e = TOPPINGS[meat].e;
+  const pl = 50 - g.pw, ph = 50 + g.pw, ul = pl - 16, oh = ph + 16;
+  $('#modalCard').innerHTML = `<h2>🔥 Grill the ${TOPPINGS[meat].name}</h2>
+    <p class="small">Tap <b>FLIP</b> (or Space) when the needle is in <b style="color:#2f9e44">PERFECT</b>. Two sides. Too early = raw, too late = burnt.</p>
+    <div id="grill"><span class="smoke" style="left:30%">💨</span><span class="smoke" style="left:62%;animation-delay:.7s">💨</span><div class="meat" id="meat">${e}</div><div class="flare">🔥🔥🔥</div></div>
+    <div id="doneBar">
+      <div class="z" style="left:0;width:${ul}%;background:#e8607a">RAW</div>
+      <div class="z" style="left:${ul}%;width:${pl - ul}%;background:#f0a35e">pink</div>
+      <div class="z" style="left:${pl}%;width:${ph - pl}%;background:#2f9e44">PERFECT</div>
+      <div class="z" style="left:${ph}%;width:${oh - ph}%;background:#a0662f">crispy</div>
+      <div class="z" style="left:${oh}%;width:${100 - oh}%;background:#2b2b2b">BURNT</div>
+      <div id="needle" style="left:0%"></div>
+    </div>
+    <p id="grillMsg">Side 1 of 2…</p>
+    <button class="big" id="flipBtn">🍳 FLIP!</button>`;
+  const needle = $('#needle'), meatEl = $('#meat'), grill = $('#grill'), msg = $('#grillMsg'), btn = $('#flipBtn');
+  let pos = 0, dir = 1, side = 0, res = [], last = performance.now(), raf, flare = 0, nextFlare = rand(1.2, 2.6), paused = false;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!paused) {
+      if ((nextFlare -= dt) <= 0) { flare = 0.9; nextFlare = rand(2, 3.5); grill.classList.add('flaring'); msg.textContent = '🔥 FLARE-UP! It cooks faster!'; }
+      if (flare > 0 && (flare -= dt) <= 0) { grill.classList.remove('flaring'); msg.textContent = `Side ${side + 1} of 2…`; }
+      pos += dir * g.v * (flare > 0 ? 1.6 : 1) * dt;
+      if (pos >= 100) { pos = 100; dir = -1; } else if (pos <= 0) { pos = 0; dir = 1; }
+      needle.style.left = pos + '%';
+      meatEl.style.filter = `brightness(${1.25 - pos / 100 * 0.9}) saturate(${1.3 - pos / 140})`;
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+  const zoneOf = p => p < ul ? 'raw' : p < pl ? 'under' : p <= ph ? 'perfect' : p <= oh ? 'over' : 'burnt';
+  const SAY = { raw: '🥶 RAW. It\'s still moving.', under: '😬 A bit pink.', perfect: '👌 PERFECT sear!', over: '😐 Extra crispy.', burnt: '💀 BURNT. It\'s a hockey puck.' };
+  function flip(ev) {
+    if (ev) ev.preventDefault();
+    if (paused) return;
+    const z = zoneOf(pos);
+    res.push(z); side++;
+    paused = true;
+    msg.textContent = SAY[z];
+    meatEl.classList.add('flip'); setTimeout(() => meatEl.classList.remove('flip'), 300);
+    if (side >= 2) return finish();
+    setTimeout(() => { pos = 0; dir = 1; paused = false; last = performance.now(); msg.textContent = 'Side 2 of 2…'; }, 900);
+  }
+  btn.onclick = flip;
+  const kd = e2 => { if (e2.code === 'Space') flip(e2); };
+  document.addEventListener('keydown', kd);
+  function finish() {
+    cancelAnimationFrame(raf);
+    document.removeEventListener('keydown', kd);
+    grill.classList.remove('flaring');
+    btn.remove();
+    const out = res.includes('raw') ? 'raw' : res.includes('burnt') ? 'burnt' : res.every(z => z === 'perfect') ? 'perfect' : 'ok';
+    msg.innerHTML = `${SAY[res[0]]} / ${SAY[res[1]]}<br><b>${{ raw: '🥩 Verdict: RAW. Her tummy is not going to like this.', burnt: '⚫ Verdict: CREMATED.', perfect: '🏆 Verdict: Restaurant quality!', ok: '🍽️ Verdict: Edible.' }[out]}</b>`;
+    setTimeout(() => done(out), 1700);
+  }
+}
+
+/* =====================================================================
+   McDonald's (only when she asks; one tap)
+   ===================================================================== */
+$('#btnMcd').onclick = () => {
+  if (S.over) return;
+  if (!evIs('mcd')) { say("I didn't ASK for a sausage. It's MY idea or it's no idea."); return; }
+  if (blocked()) return;
+  S.tummy = clamp(S.tummy + 25);
+  S.happy = clamp(S.happy + 25);
+  endEvent(true);
+  flashHappy(2500); hearts(5, '🌭');
+  say(pick(['SAUSAGE. I love you now. Temporarily.', "One plain sausage patty. As ordered. By me. I'll tell Dad you were… adequate.", 'Plain. Warm. Perfect. Just like me.']));
+  showPhoto('sausage');
+  updateAll();
+};
+
+/* =====================================================================
+   THE WALK: poops scroll by fast — tap them. She plops down — tap HER.
+   ===================================================================== */
+$('#btnWalk').onclick = () => {
+  if (blocked()) return;
+  if (S.loc === 'inside') { S.loc = 'chair'; }
+  runWalk();
+};
+// townhome rows (brick bottom, tan siding top, brown shutters, white doors, porch rails, lamp posts)
+function condoUnit(x, extra) {
+  let siding = '';
+  for (let y = 28; y < 82; y += 5) siding += `<line x1="${x}" y1="${y}" x2="${x + 200}" y2="${y}" stroke="#a8916b" stroke-width="1"/>`;
+  const win = wx => `<rect x="${wx - 9}" y="36" width="9" height="34" fill="#4a2f1f"/><rect x="${wx + 30}" y="36" width="9" height="34" fill="#4a2f1f"/><rect x="${wx}" y="36" width="30" height="34" fill="#f4f2ee"/><rect x="${wx + 3}" y="39" width="24" height="28" fill="#2d343b"/><line x1="${wx + 15}" y1="39" x2="${wx + 15}" y2="67" stroke="#f4f2ee" stroke-width="2"/><path d="M${wx + 4} 41 L${wx + 12} 41 L${wx + 5} 55Z" fill="#fff" opacity=".18"/>`;
+  let rails = '';
+  for (let bx = x + 64; bx <= x + 132; bx += 7) rails += `<rect x="${bx}" y="128" width="3" height="22" fill="#5a3a26"/>`;
+  return `
+  <rect x="${x}" y="24" width="200" height="60" fill="#cdb791"/>${siding}
+  <path d="M${x - 2} 26 L${x + 202} 26 L${x + 196} 10 L${x + 4} 10Z" fill="#3a3836"/>
+  ${win(x + 32)}${win(x + 128)}
+  <path d="M${x - 4} 92 L${x + 204} 92 L${x + 198} 80 L${x + 2} 80Z" fill="#3a3836"/>
+  <rect x="${x}" y="92" width="200" height="62" fill="url(#brick)"/>
+  <rect x="${x}" y="22" width="3" height="132" fill="#8a7658"/>
+  <rect x="${x + 18}" y="100" width="34" height="54" fill="#e9e6df"/><rect x="${x + 21}" y="103" width="28" height="51" fill="#fbfaf7"/><rect x="${x + 26}" y="108" width="18" height="14" fill="#c9d4dc"/><circle cx="${x + 43}" cy="130" r="2" fill="#b8962e"/>
+  <rect x="${x + 62}" y="98" width="72" height="40" fill="#f4f2ee"/><rect x="${x + 65}" y="101" width="66" height="34" fill="#2d343b"/><line x1="${x + 98}" y1="101" x2="${x + 98}" y2="135" stroke="#f4f2ee" stroke-width="2"/><path d="M${x + 68} 103 L${x + 84} 103 L${x + 70} 125Z" fill="#fff" opacity=".15"/>
+  <rect x="${x + 60}" y="124" width="78" height="5" fill="#6b4630"/><rect x="${x + 60}" y="146" width="78" height="4" fill="#6b4630"/>${rails}
+  <ellipse cx="${x + 70}" cy="154" rx="20" ry="11" fill="#3f7d34"/><ellipse cx="${x + 102}" cy="155" rx="22" ry="10" fill="#4f9a3f"/><ellipse cx="${x + 134}" cy="154" rx="18" ry="11" fill="#3a722f"/>
+  <ellipse cx="${x + 8}" cy="155" rx="12" ry="8" fill="#4f9a3f"/>
+  ${extra === 'lamp' ? `<rect x="${x + 170}" y="104" width="4" height="56" fill="#1d1d1d"/><path d="M${x + 164} 104 L${x + 180} 104 L${x + 177} 92 L${x + 167} 92Z" fill="#1d1d1d"/><rect x="${x + 168}" y="95" width="8" height="8" fill="#ffe9a8"/><path d="M${x + 165} 92 L${x + 179} 92 L${x + 172} 86Z" fill="#1d1d1d"/>`
+    : `<rect x="${x + 172}" y="128" width="4" height="32" fill="#3b3b3b"/><rect x="${x + 164}" y="118" width="20" height="13" rx="6" fill="#2c3e6b"/><rect x="${x + 182}" y="113" width="2" height="9" fill="#d33"/><rect x="${x + 182}" y="113" width="6" height="4" fill="#d33"/>`}`;
+}
+const CONDO_BG = 'url("data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="400" height="160">
+  <defs><pattern id="brick" width="16" height="8" patternUnits="userSpaceOnUse"><rect width="16" height="8" fill="#a24f3c"/><path d="M0 7.5H16M8 0V3.75M0 3.75H16M0 3.75V7.5M16 3.75V7.5" stroke="#d7c6b4" stroke-width="1"/><rect x="1" y="4.5" width="5" height="2.5" fill="#8f4232"/></pattern></defs>
+  ${condoUnit(0, 'lamp')}${condoUnit(200, 'mail')}</svg>`) + '")';
+const TREE_BG = 'url("data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 74" width="260" height="74">
+  <g fill="#2f6b2a"><circle cx="20" cy="6" r="30"/><circle cx="58" cy="0" r="26"/><circle cx="150" cy="10" r="34"/><circle cx="196" cy="2" r="24"/><circle cx="240" cy="-4" r="22"/></g>
+  <g fill="#3f8a35"><circle cx="34" cy="16" r="18"/><circle cx="140" cy="22" r="20"/><circle cx="172" cy="18" r="16"/></g>
+  <g fill="#e08a1e" opacity=".85"><circle cx="70" cy="18" r="9"/><circle cx="210" cy="20" r="10"/><circle cx="118" cy="30" r="5"/></g></svg>`) + '")';
+function runWalk() {
+  showPhoto('harness');
+  const extra = Math.min(5, S.badFood || 0) + (S.upset > 0 ? 1 : 0);
+  const LEN = 16;
+  const events = [];
+  for (let i = 0; i < 5 + extra; i++) events.push({ t: rand(1, LEN - 2), k: 'poop' });
+  for (let i = 0; i < 2; i++) events.push({ t: rand(2, LEN - 3), k: 'sit' });
+  events.sort((a, b) => a.t - b.t);
+  openModal(`<h2>💩 Walkies</h2>
+    <p class="small">Tap every 💩 before it scrolls away. If she plops down, tap <b>her</b> to pick her up.</p>
+    ${extra ? `<p class="small"><b>🤢 Thanks to that ${S.badMeal || 'questionable meal'}, bring EXTRA bags.</b></p>` : ''}
+    <div id="lane" class="${S.weather} moving">
+      <div class="condos" style='background-image:${CONDO_BG}'></div>
+      <div class="trees" style='background-image:${TREE_BG}'></div>
+      <div class="lane-bubble" id="laneBubble">*struts in her harness*</div>
+      <div id="shoe"></div>
+      <div class="walker rosie-wrap harness s-walk happy" id="walker">${rosieSVG()}</div>
+    </div>
+    <div class="trail">🏠<div class="track"><i id="trailDog" style="left:0%">🐕</i></div>🏁</div>
+    <p id="walkMsg">&nbsp;</p>`);
+  const lane = $('#lane'), walker = $('#walker'), lb = $('#laneBubble'), shoe = $('#shoe');
+  const wmsg = t => { $('#walkMsg').textContent = t; };
+  const STROLL = ['*struts*', '*sniffs a mailbox*', '*prances*', '*judges a lawn gnome*', '*ignores a cat*', '*tail held HIGH*', '*glares at a leaf*', '*judges condo #47*', 'Every one of these condos is jealous of me.', '*waves at her fans on the porches*', '*sniffs a lamp post thoroughly*', 'That porch is tacky. So is that one.'];
+  let t = 0, last = performance.now(), sit = null, carried = 0, done = false, scooped = 0, missed = 0, stepped = 0, sat = 0, pts = 0, nextStroll = 1.5, raf;
+
+  function frame(now) {
+    if (done) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!sit) t += dt;
+    if (carried > 0) { carried -= dt; if (carried <= 0) { walker.className = 'walker rosie-wrap harness s-walk happy'; } }
+    $('#trailDog').style.left = Math.min(100, (t / LEN) * 100) + '%';
+    while (events.length && events[0].t <= t && !sit) {
+      const e = events.shift();
+      if (e.k === 'poop') dropPoop(); else startSit();
+    }
+    if (sit) {
+      sit.left -= dt;
+      if (sit.left <= 0) { sat++; pts -= 6; S.happy = clamp(S.happy - 3); wmsg(pick(['😤 You ignored her. She sat on the sidewalk in protest.', "😤 She's filing a complaint about your arms. They're 'decorative.'"])); endSit(); }
+    } else if ((nextStroll -= dt) <= 0) { nextStroll = rand(1.6, 2.6); lb.textContent = pick(STROLL); }
+    if (t >= LEN && !lane.querySelector('.poop:not(.got)')) return finish();
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+
+  function dropPoop() {
+    lb.textContent = pick(['*squats* Don\'t look.', '*business face*', 'Bag it, peasant.', '*hunches majestically*']);
+    const p = document.createElement('button');
+    p.className = 'poop'; p.textContent = '💩';
+    lane.appendChild(p);
+    requestAnimationFrame(() => requestAnimationFrame(() => { p.style.left = '-14%'; }));
+    p.onpointerdown = e => {
+      e.preventDefault(); e.stopPropagation();
+      if (p.classList.contains('got')) return;
+      p.classList.add('got'); p.textContent = '🛍️';
+      scooped++; pts += 8;
+      wmsg(pick(['✅ Bagged!', '✅ Scooped. Glamorous.', '✅ Bag secured. Warm. Gross.', '✅ Nice snag!']));
+      setTimeout(() => p.remove(), 350);
+    };
+    p.addEventListener('transitionend', e => {
+      if (e.propertyName !== 'left' || p.classList.contains('got')) return;
+      p.classList.add('got');
+      missed++;
+      if (Math.random() < 0.5) { stepped++; pts -= 8; wmsg('👟💩 You missed one… and STEPPED in it.'); shoe.textContent = '👟💩'.repeat(Math.min(stepped, 3)); }
+      else { pts -= 8; wmsg(pick(['😱 Missed one. The HOA has been notified.', '😱 You left it. A jogger gasped.'])); }
+      p.remove();
+    });
+  }
+  function startSit() {
+    sit = { left: 2.4 };
+    lane.classList.remove('moving');
+    walker.className = 'walker rosie-wrap harness s-sit';
+    lb.textContent = pick(['*plops down* Carry me.', 'UP. Now.', 'My legs are decorative.', 'Royalty does not walk.']);
+  }
+  function endSit() { sit = null; lane.classList.add('moving'); walker.className = 'walker rosie-wrap harness s-walk happy'; }
+  walker.onpointerdown = e => {
+    e.preventDefault();
+    if (done) return;
+    if (sit) {
+      endSit();
+      pts += 10;
+      walker.className = 'walker rosie-wrap harness carried happy';
+      carried = 1.4;
+      lb.textContent = pick(['This is how royalty travels.', 'Faster, peasant. Mush.', 'Yes. Like a little baby queen.']);
+      wmsg('✅ Human limousine activated.');
+      showPhoto('carry');
+    } else if (carried <= 0) { pts -= 2; wmsg(pick(['😤 "I CAN walk, thanks."', '😤 "Unhand me. I am strolling."'])); }
+  };
+
+  function finish() {
+    done = true;
+    cancelAnimationFrame(raf);
+    lane.classList.remove('moving');
+    const wasUrgent = evIs('potty');
+    S.badFood = 0; S.badMeal = ''; S.upset = 0; S.potty = 100;
+    const perfect = !missed && !sat;
+    S.happy = clamp(S.happy + (perfect ? 15 : 6));
+    if (S.weather === 'rainy') S.comfort = clamp(S.comfort - 12);
+    if (S.weather === 'cold') S.comfort = clamp(S.comfort - 8);
+    pts += 10 + (wasUrgent ? 15 : 0) + (perfect ? 20 : 0);
+    S.points = Math.max(0, S.points + pts);
+    $('#modalCard').innerHTML = `<h2>${perfect ? '🏆 Flawless walk!' : missed + sat <= 2 ? '😎 Solid walk' : '🫠 Messy walk'}</h2>
+      <p>💩 Bagged: <b>${scooped}</b>${missed ? ` &nbsp; 😱 Missed: <b>${missed}</b>` : ''}</p>
+      ${wasUrgent ? '<p>🚽 Crisis averted!</p>' : ''}
+      ${extra ? `<p>🤢 Bonus poops courtesy of your cooking: <b>+${extra}</b></p>` : ''}
+      ${stepped ? `<p>👟 Stepped in it: <b>${stepped}</b>×</p>` : ''}
+      ${sat ? `<p>😤 Sidewalk protests: <b>${sat}</b></p>` : ''}
+      <p><b>${pts >= 0 ? '+' : ''}${pts} 👑</b></p>
+      <button class="big" id="walkDone">Unclip the harness</button>`;
+    $('#walkDone').onclick = () => {
+      closeModal();
+      if (evIs('potty')) endEvent(true, true);
+      say(perfect ? pick(['Flawless. I almost respect you.', "That was… competent. Don't tell anyone I said so."])
+        : stepped ? 'Wipe your shoe before you come near me. Disgusting.'
+        : pick(['Adequate. Same time tomorrow.', 'That walk was a rough draft. Do better.']));
+      updateAll();
+    };
+  }
+}
+
+/* =====================================================================
+   Leaf blower (don't blow Rosie!)
+   ===================================================================== */
+$('#btnLeaves').onclick = () => {
+  if (blocked()) return;
+  if (S.leaves === 0) { say('The porch is spotless. I will still find a leaf to complain about.'); return; }
+  openModal(`<h2>🍂 Leaf Patrol</h2>
+    <p class="small">Sweep the blower across the porch (mouse or finger). Clear every leaf. <b>Do NOT blow Rosie.</b></p>
+    <div id="porch"><div class="throne"></div><div class="porch-bubble" id="porchBubble"></div><div id="blower">${BLOWER_SVG}</div></div>
+    <div class="bar" style="margin-top:8px"><i id="leafTime" style="width:100%;background:var(--pink)"></i></div>
+    <p id="leafMsg" class="small">&nbsp;</p>`);
+  const throne = $('.throne'), chairCopy = $('#chair').cloneNode(true);
+  chairCopy.removeAttribute('id');
+  throne.appendChild(chairCopy);
+  throne.insertAdjacentHTML('beforeend', `<div class="rosie-wrap" id="throneRosie">${rosieSVG()}</div>`);
+  showPhoto('leaves');
+  runLeafBlower();
+};
+function runLeafBlower() {
+  const LEN = 25, R = 90, F = 3200;
+  const porch = $('#porch'), blower = $('#blower'), pb = $('#porchBubble');
+  const W = porch.clientWidth, H = porch.clientHeight, leaves = [];
+  let px = -999, py = -999, active = false, down = false, t = 0, last = performance.now(), barkIn = 1, cleared = 0, raf, done = false, hits = 0, lastHit = -9;
+  const tr = $('#throneRosie'), pr = porch.getBoundingClientRect(), rr = tr.getBoundingClientRect();
+  const RX = rr.left - pr.left + rr.width / 2, RY = rr.top - pr.top + rr.height * 0.45, HIT_R = Math.max(55, rr.width * 0.75);
+  function spawn(x, y) {
+    const el = document.createElement('span'), tiny = Math.random() < 0.5;
+    el.className = 'pleaf' + (tiny ? ' tiny' : '');
+    if (!tiny) el.textContent = pick(['🍂', '🍁', '🍂', '🍃']);
+    porch.appendChild(el);
+    leaves.push({ el, x, y, vx: 0, vy: 0, r: Math.random() * 360 });
+  }
+  const start = Math.round(Math.min(34, 8 + S.leaves * 0.7));
+  for (let i = 0; i < start; i++) {
+    let x, y;
+    do { x = 20 + Math.random() * (W - 40); y = H * 0.2 + Math.random() * (H * 0.75); } while (Math.hypot(x - RX, y - RY) < HIT_R * 0.7);
+    spawn(x, y);
+  }
+  const setPt = e => { const b = porch.getBoundingClientRect(); px = e.clientX - b.left; py = e.clientY - b.top; };
+  porch.onpointermove = e => { setPt(e); active = e.pointerType === 'mouse' || down; };
+  porch.onpointerdown = e => { down = true; active = true; setPt(e); try { porch.setPointerCapture(e.pointerId); } catch (_) {} };
+  porch.onpointerup = porch.onpointercancel = e => { down = false; active = e.pointerType === 'mouse'; };
+  porch.onpointerleave = () => { if (!down) active = false; };
+  function frame(now) {
+    if (done) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+    blower.classList.toggle('on', active);
+    blower.style.transform = `translate(${px}px,${py}px)`;
+    const onHer = active && Math.hypot(px - RX, py - RY) < HIT_R;
+    blower.classList.toggle('danger', onHer);
+    if (onHer && t - lastHit > 1.2) {
+      lastHit = t; hits++;
+      S.happy = clamp(S.happy - 6);
+      pb.textContent = pick(['HEY! Not ME!', 'Did you just BLOW me?!', "My FUR! I'm calling Dad.", 'Aim for the LEAVES, genius.', "I'm not a LEAF.", 'My blowout is RUINED.']);
+      pb.classList.add('show'); setTimeout(() => pb.classList.remove('show'), 1300);
+      tr.classList.remove('refuse'); void tr.offsetWidth; tr.classList.add('refuse');
+    }
+    const fr = Math.pow(0.18, dt);
+    for (let i = leaves.length - 1; i >= 0; i--) {
+      const l = leaves[i];
+      if (active) { const dx = l.x - px, dy = l.y - py, d = Math.hypot(dx, dy); if (d < R && d > 0.1) { const f = F * (1 - d / R); l.vx += (dx / d) * f * dt; l.vy += (dy / d) * f * dt; } }
+      l.vx *= fr; l.vy *= fr; l.x += l.vx * dt; l.y += l.vy * dt; l.r += (Math.abs(l.vx) + Math.abs(l.vy)) * dt * 2;
+      l.el.style.transform = `translate(${l.x - 8}px,${l.y - 8}px) rotate(${l.r}deg)`;
+      if (l.x < -30 || l.x > W + 30 || l.y < -30 || l.y > H + 30) { l.el.remove(); leaves.splice(i, 1); cleared++; }
+    }
+    if (active && !onHer && (barkIn -= dt) <= 0) {
+      barkIn = rand(2, 3.5);
+      pb.textContent = pick(['BARK! BARK!', 'How DARE that machine.', '*judgmental growl*', 'You missed one. And one. And one.']);
+      pb.classList.add('show'); setTimeout(() => pb.classList.remove('show'), 1100);
+    }
+    $('#leafTime').style.width = Math.max(0, 100 - (t / LEN) * 100) + '%';
+    if (t > 1) $('#leafMsg').textContent = hits && t - lastHit < 1.3 ? `😾 You blew Rosie! (${hits})` : `Leaves left: ${leaves.length}`;
+    if (leaves.length <= 2) return finish(true);
+    if (t >= LEN) return finish(false);
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+  function finish(cleanedUp) {
+    done = true;
+    cancelAnimationFrame(raf);
+    const left = leaves.length, timeLeft = Math.max(0, Math.round(LEN - t));
+    const pts = cleared + (cleanedUp ? 20 + timeLeft * 2 : 0) + (hits === 0 ? 10 : -hits * 5);
+    S.leaves = cleanedUp ? 0 : Math.round(left * 1.2);
+    S.happy = clamp(S.happy + (cleanedUp ? 10 : 3));
+    S.points = Math.max(0, S.points + pts);
+    const line = hits >= 3 ? pick(["You blew me more than the leaves. I'm drafting a statement.", 'My fur is in a different ZIP code now.'])
+      : hits ? pick(['Porch: okay. My hair: ruined. Mixed review.', 'Next time, aim for the leaves. Not the QUEEN.'])
+      : cleanedUp ? pick(['Spotless. The throne area is presentable again.', "Fine. It's clean. I was going to do it myself anyway."])
+      : pick(['You missed a spot. Several spots. A whole forest, really.', 'I see leaves. Do you see leaves? I see leaves.']);
+    $('#modalCard').innerHTML = `<h2>${cleanedUp ? '✨ Porch Spotless!' : "🍂 Time's Up"}</h2>
+      <p>🍃 Leaves blasted: <b>${cleared}</b>${cleanedUp ? '' : ` &nbsp; 😩 Left behind: <b>${left}</b>`}</p>
+      <p>${hits ? `😾 Blew Rosie: <b>${hits}</b> time${hits > 1 ? 's' : ''}` : "😇 Didn't ruffle a single hair on her."}</p>
+      <p><b>${pts >= 0 ? '+' : ''}${pts} 👑</b></p>
+      <button class="big" id="leafDone">Put the blower away</button>`;
+    $('#leafDone').onclick = () => {
+      closeModal();
+      renderLeaves();
+      if (evIs('wind')) { if (cleanedUp) endEvent(true); else { endEvent(false, true); S.happy = clamp(S.happy - 8); } }
+      if (hits >= 3) refuse(); else if (cleanedUp) { flashHappy(); hearts(3, '✨'); }
+      say(line);
+      updateAll();
+    };
+  }
+}
+
+/* =====================================================================
+   Tummy rubs
+   ===================================================================== */
+$('#btnRub').onclick = () => {
+  if (evIs('howl')) return calm('rub');
+  if (blocked() || needsOutside('Tummy rubs')) return;
+  rubGame();
+};
+// Swipe across her belly in whatever direction she demands. She changes her mind. Constantly.
+const DIRS = { L: ['⬅️', 'LEFT'], R: ['➡️', 'RIGHT'], U: ['⬆️', 'UP'], D: ['⬇️', 'DOWN'] };
+const RUB_WRONG = {
+  L: ['LEFT. My OTHER left. YOUR other left. Ugh.', "That's not left. I don't know what that was."],
+  R: ['RIGHT. Like the direction. Not like "you\'re right." You\'re not.', 'I said RIGHT. Are your hands on backwards?'],
+  U: ['UP. Toward my majestic chin. Not wherever THAT was.', 'Up. U-P. I can spell it slower.'],
+  D: ['DOWN. Toward the toes. Basic belly geography.', 'Down! DOWN! Is this your first belly??'],
+};
+const RUB_TIMEOUT = ['Hello?? The belly is UP. It is WAITING.', 'Did you fall asleep? On MY time?', "I'm just lying here. Exposed. Like a fool."];
+const RUB_GOOD = ['Yesss.', 'Mmm. Acceptable.', 'Correct.', 'Oh that\'s the spot.', '*leg kicks involuntarily*', 'Don\'t get cocky.'];
+function rubGame(opts = {}) {
+  const N = 6, MAX_MISS = 3;
+  openModal(`<h2>🤲 Tummy Rub</h2>
+    <p class="small">Swipe across her belly in the direction she demands (or use arrow keys). <b>She changes her mind.</b> ${MAX_MISS} mistakes and she calls Dad.</p>
+    <div id="rubPad"><div class="rub-rosie rosie-wrap belly happy">${rosieSVG()}</div><div id="rubCue"></div><div id="rubSwipe">🤚</div><div id="rubTime"><i></i></div></div>
+    <div id="rubStats"><span id="rubCount">Rub 0/${N}</span><span id="rubLives">${'💖'.repeat(MAX_MISS)}</span></div>
+    <p id="rubMsg"><b>Rosie:</b> "${opts.line || pick(['Belly is up. Do NOT mess this up.', 'I will be giving directions. Follow them. Exactly.', 'This is a privilege. Act like it.'])}"</p>`);
+  const pad = $('#rubPad'), cue = $('#rubCue'), bar = $('#rubTime i'), hand = $('#rubSwipe');
+  const talk = m => { $('#rubMsg').innerHTML = `<b>Rosie:</b> "${m}"`; };
+  let i = 0, miss = 0, want = null, fake = null, left = 0, limit = 0, last = performance.now(), raf, wait = 1.1, done = false, perfect = true, start = null;
+  function next() {
+    if (i >= N) return win();
+    limit = 3.8 - (i / (N - 1)) * 1.3;
+    left = limit;
+    const keys = Object.keys(DIRS);
+    want = pick(keys);
+    fake = null;
+    if (i >= 2 && Math.random() < 0.28) {               // fake-out: show one, then switch
+      fake = { show: pick(keys.filter(k => k !== want)), at: limit - rand(0.35, 0.55) };
+      cue.className = '';
+      cue.innerHTML = `${DIRS[fake.show][0]}<small>${DIRS[fake.show][1]}</small>`;
+    } else { cue.className = ''; cue.innerHTML = `${DIRS[want][0]}<small>${DIRS[want][1]}</small>`; }
+  }
+  function frame(now) {
+    if (done) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (wait > 0) { wait -= dt; if (wait <= 0) next(); }
+    else if (want) {
+      left -= dt;
+      if (fake && left <= fake.at) { fake = null; cue.className = 'fake'; cue.innerHTML = `${DIRS[want][0]}<small>😏 JK — ${DIRS[want][1]}</small>`; }
+      bar.style.width = Math.max(0, left / limit * 100) + '%';
+      if (left <= 0) mistake(pick(RUB_TIMEOUT));
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+  function swipe(d) {
+    if (done || !want || wait > 0) return;
+    const shown = fake ? fake.show : want;
+    hand.style.opacity = 0;
+    if (fake && d === fake.show) return mistake(pick(['Ha! Changed my mind. Keep UP.', 'Psych. I never wanted that. Pay attention.', 'Gotcha. I am unpredictable. It\'s part of my charm.']));
+    if (d !== want) return mistake(pick(RUB_WRONG[want]));
+    i++;
+    hearts(1);
+    $('#rubCount').textContent = `Rub ${i}/${N}`;
+    talk(pick(RUB_GOOD));
+    cue.innerHTML = '✅'; want = null; wait = 0.45;
+    void shown;
+  }
+  function mistake(line) {
+    miss++; perfect = false;
+    $('#rubLives').textContent = '💖'.repeat(Math.max(0, MAX_MISS - miss)) + '💔'.repeat(Math.min(miss, MAX_MISS));
+    talk(line);
+    cue.innerHTML = '❌'; want = null; fake = null;
+    pad.classList.remove('jolt'); void pad.offsetWidth;
+    if (miss >= MAX_MISS) return lose();
+    wait = 1.2;
+  }
+  // pointer swipes
+  pad.addEventListener('pointerdown', e => { e.preventDefault(); start = { x: e.clientX, y: e.clientY }; try { pad.setPointerCapture(e.pointerId); } catch (_) {} });
+  pad.addEventListener('pointermove', e => {
+    const r = pad.getBoundingClientRect();
+    hand.style.left = e.clientX - r.left - 15 + 'px'; hand.style.top = e.clientY - r.top - 15 + 'px'; hand.style.opacity = 1;
+    if (!start) return;
+    const dx = e.clientX - start.x, dy = e.clientY - start.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 40) return;
+    start = { x: e.clientX, y: e.clientY };
+    swipe(Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'L' : 'R') : (dy < 0 ? 'U' : 'D'));
+  });
+  ['pointerup', 'pointercancel'].forEach(t => pad.addEventListener(t, () => { start = null; }));
+  const kd = e => { const m = { ArrowLeft: 'L', ArrowRight: 'R', ArrowUp: 'U', ArrowDown: 'D' }[e.code]; if (m) { e.preventDefault(); swipe(m); } };
+  document.addEventListener('keydown', kd);
+  function cleanup() { done = true; cancelAnimationFrame(raf); document.removeEventListener('keydown', kd); }
+  function win() {
+    cleanup();
+    const pts = perfect ? 25 : 12;
+    $('#modalCard').innerHTML = `<h2>${perfect ? '🏆 Flawless Rub' : '😌 Rub Accepted'}</h2><div class="mini-rosie rosie-wrap belly happy">${rosieSVG()}</div>
+      <p><b>Rosie:</b> "${perfect ? pick(['…That was perfect. I hate that it was perfect. Tell no one.', 'Okay. You may be promoted from "staff" to "acceptable staff."']) : pick(['Decent. Not Dad-level. But decent.', 'A few mistakes. I\'ll only mention them forever.'])}"</p>
+      <p><b>+${pts} 👑</b></p><button class="big" id="rubOk">She's melted 🫠</button>`;
+    $('#rubOk').onclick = () => {
+      closeModal();
+      S.happy = clamp(S.happy + (perfect ? 35 : 25));
+      if (evIs('rub')) endEvent(true);
+      S.points += pts; floatPoints(pts);
+      flashHappy(2500); hearts(6); showPhoto('belly');
+      say(pick(['You may rub again later. Maybe.', 'I am a puddle now. A dignified puddle.', 'Okay that was nice. Tell no one. Ever.']));
+      updateAll();
+    };
+  }
+  function lose() {
+    cleanup();
+    $('#modalCard').innerHTML = `<h2>😾 Rub REJECTED</h2><div class="mini-rosie rosie-wrap refuse">${rosieSVG()}</div>
+      <p><b>Rosie:</b> "${pick(['I have never been so disrespected in my LIFE. And I once saw a cat.', 'You rubbed me like you were sanding a deck. I\'m calling Dad.', 'That was assault. On my FEELINGS. Where is my phone.', 'Wrong. Way. I want a manager. I want DAD.'])}"</p>
+      <p class="small">📱 She's already typing…</p><button class="big" id="rubOk">Brace yourself 😬</button>`;
+    $('#rubOk').onclick = () => {
+      closeModal();
+      if (evIs('rub')) endEvent(false, true);
+      S.happy = clamp(S.happy - 10);
+      refuse();
+      say(pick(['Don\'t touch me. I\'m texting.', 'Shh. I\'m composing a strongly worded message.', "Read receipts are ON. He's seen it."]));
+      reportToDad('rub');
+      updateAll();
+    };
+  }
+}
+
+rosie.addEventListener('pointerdown', e => {
+  if (S.over || S.modalOpen) return;
+  if (evIs('howl')) return calm('pat');
+  if (S.busy === 'zoom') return catchZoom();
+  if (S.userPaused || S.ev) return;
+  if (Date.now() - lastPet > 4000) {
+    lastPet = Date.now();
+    S.happy = clamp(S.happy + 3);
+    flashHappy(1200); hearts(2);
+    say(pick(['Hm. Petting accepted.', 'You may continue.', 'Lower. LOWER. …The tummy, obviously.', "Careful. I'm a collector's item.", 'Did I say you could touch me? …Fine. Continue.', 'Two more pats and I might tolerate you.']));
+    updateAll();
+  }
+});
+
+/* =====================================================================
+   Zoomies
+   ===================================================================== */
+function startZoomies() {
+  S.busy = 'zoom';
+  zoomCatches = 0;
+  rosie.classList.remove('at-inside', 'at-mat', 'shiver', 'blanket', 'shades', 'dance', 'want');
+  rosie.classList.add('zoom', 'happy');
+  showPhoto('zoomies');
+  const move = () => { rosie.style.left = rand(30, 78) + '%'; rosie.style.bottom = rand(4, 22) + '%'; if (Math.random() < 0.5) hearts(1, '💨'); };
+  move();
+  zoomIv = setInterval(move, 950);
+}
+function catchZoom() { if (S.busy !== 'zoom') return; zoomCatches++; hearts(2, '✋'); if (zoomCatches >= 2) endZoomies(true); }
+function endZoomies(caught) {
+  clearInterval(zoomIv);
+  if (S.busy !== 'zoom') return;
+  S.busy = null;
+  rosie.classList.remove('zoom', 'happy');
+  if (evIs('zoom')) endEvent(caught, !caught);
+  if (!caught) S.potty = clamp(S.potty - 12);
+  placeRosie();
+  say(caught ? pick(['I was NOT zooming. You saw nothing.', "That wasn't zoomies. That was cardio. Mind your business."]) : '*collapses dramatically* Carry me to my chair.');
+  updateAll();
+}
+
+/* =====================================================================
+   Door, umbrella, blanket, pause
+   ===================================================================== */
+function doorAction() {
+  if (evIs('howl')) {
+    const why = S.ev.why;
+    if (!why) return calm('pat');
+    endEvent(false, true);
+    S.loc = why === 'out' ? 'chair' : 'inside';
+    S.points += 5; floatPoints(5);
+    placeRosie();
+    say(why === 'out' ? pick(['Oh, NOW the door works? Amazing.', 'Freedom. It only took the whole neighborhood.']) : pick(['Inside. Finally. Did the neighbors enjoy my concert?', 'Was that so hard? Apparently, yes.']));
+    afterGearCheck(); updateAll();
+    return;
+  }
+  if (blocked()) return;
+  if (S.loc === 'inside') {
+    S.loc = 'chair';
+    if (evIs('out')) endEvent(true);
+    placeRosie();
+    if (S.leaves >= 10) say('Ahh, my throne. And… a pile of LEAVES. Wonderful.');
+    else if (isComfy()) { say(pick(['FREEDOM. Thank you, staff.', 'Ahh. My throne.', 'Out. Good. Inside was getting boring.'])); flashHappy(); showPhoto('chair'); }
+    afterGearCheck();
+  } else {
+    const asked = evIs('in');
+    if (asked) endEvent(true);
+    else if (S.ev) endEvent(false, true);                // going inside cancels whatever she was demanding out here
+    S.loc = 'inside';
+    say(asked ? pick(['Thank you. The couch and I have a standing appointment.', 'Ahh. Climate control. You may live.', 'See? You CAN listen. Gold star. A small one.',
+      'Inside, as requested. As DESERVED.', 'Perfect timing. I was about to be outdoorsy for one second too long.', "Couch, here I come. Don't wait up."])
+      : pick(['Inside? I didn\'t ask for inside. But fine. I want it noted.', "Oh, we're going in? Nobody consulted me.", "I'll be pressing my nose on the glass. Enjoy cleaning it."]));
+  }
+  placeRosie(); updateAll();
+}
+function afterGearCheck() { if (!S.ev && outside() && !isComfy()) startEvent('gear'); }
+$('#btnDoor').onclick = doorAction;
+$('#glassDoor').onclick = doorAction;
+function gearChanged() {
+  placeRosie();
+  if (S.ev && (S.ev.type === 'weather' || S.ev.type === 'gear') && isComfy()) {
+    const fast = S.ev.left >= S.ev.total * 0.6;
+    endEvent(true);
+    say(fast ? pick(['That was fast. Suspiciously competent.', 'Okay, Mr. Weatherman. I see you.']) : pick(['Took you long enough.', 'Finally. I was about to file paperwork.']));
+    flashHappy();
+  } else afterGearCheck();
+  updateAll();
+}
+$('#btnUmbrella').onclick = () => {
+  if (blocked()) return;
+  S.umbrella = !S.umbrella;
+  if (S.umbrella && S.weather === 'rainy') showPhoto('umbrella');
+  if (S.umbrella && S.weather === 'sunny' && outside()) { say('Shade? The SUN is out. I came here to TAN.'); refuse(); }
+  if (!S.umbrella && S.weather === 'rainy' && outside()) { say('You took my umbrella IN THE RAIN? Bold. Stupid, but bold.'); refuse(); }
+  gearChanged();
+};
+$('#btnBlanket').onclick = () => {
+  if (blocked()) return;
+  S.blanket = !S.blanket;
+  if (S.blanket && S.weather === 'sunny' && outside()) { say('A blanket? In THIS heat? Are you trying to bake me?'); refuse(); }
+  else if (S.blanket) showPhoto('blanket');
+  else if (S.weather === 'cold' && outside()) { say('WHO TOOK MY BLANKET. Name names.'); refuse(); }
+  gearChanged();
+};
+$('#btnPause').onclick = () => {
+  if (S.over) return;
+  S.userPaused = !S.userPaused;
+  $('#veil').classList.toggle('show', S.userPaused);
+  if (S.userPaused) save();
+  updateAll();
+};
+
+/* =====================================================================
+   Howling → neighbors → police
+   ===================================================================== */
+const NEIGHBORS = ['👵', '👴', '🧔', '👩‍🦰', '👨‍🦳', '👩'];
+const NEIGHBOR_LINES = ['Is that dog OKAY?!', 'Some of us work from home!', "Why is there a WOLF?", 'Rosie, PLEASE.', "Who's watching this dog??", 'My baby JUST fell asleep!', "I'm getting Rosie's dad's number…", 'Every. Single. Day.'];
+function startHowlFx() {
+  clearInterval(howlFx);
+  howlFx = setInterval(() => {
+    if (S.userPaused || S.modalOpen) return;
+    const a = document.createElement('div'); a.className = 'awoo';
+    a.textContent = pick(['AWOOOOO', 'AROOOO!', 'AWOO-OO-OO', 'HOOOWL', 'AROOO 🎶']);
+    a.style.left = rosie.offsetLeft + rosie.offsetWidth * (0.1 + Math.random() * 0.5) + 'px';
+    a.style.top = rosie.offsetTop + 'px';
+    scene.appendChild(a); setTimeout(() => a.remove(), 1900);
+  }, 700);
+}
+function stopHowlFx() { clearInterval(howlFx); howlFx = null; document.querySelectorAll('.neighbor').forEach(n => { n.classList.remove('up'); setTimeout(() => n.remove(), 400); }); }
+function calm(kind) {
+  if (!evIs('howl') || S.over || S.modalOpen) return;
+  const lasted = S.ev.t;
+  endEvent(false, true);
+  if (kind === 'rub') { rubGame({ line: 'Belly rub accepted as an apology. Do it RIGHT and maybe I stop singing.' }); return; }
+  S.happy = clamp(S.happy + (kind === 'hug' ? 8 : 4));
+  S.points += kind === 'hug' ? 8 : 4;
+  floatPoints(kind === 'hug' ? 8 : 4);
+  flashHappy(1800);
+  hearts(kind === 'hug' ? 5 : 2, kind === 'hug' ? '🤗' : '💖');
+  say(lasted > 8 && kind === 'pat' ? `${lasted} seconds of howling. That's on you.` : kind === 'hug' ? pick(['Ugh. A hug. …Okay this is nice. Tell no one.', 'I am NOT melting. This is just the sun.']) : pick(['Oh. NOW you notice me.', "A pat. That's it? …Fine. Accepted."]));
+  updateAll();
+}
+function policeArrive() {
+  S.points = Math.max(0, S.points - 75);
+  const cop = $('#cop'), siren = $('#siren');
+  siren.classList.add('on');
+  $('#copSays').textContent = pick(["Ma'am, we got a noise complaint.", 'Is this the famous Rosie?', 'We heard her from the station.']);
+  cop.classList.add('in');
+  note('🚓 The POLICE showed up for the howling! Noise ticket: −75 points.', 6000);
+  floatPoints(-75);
+  setTimeout(() => say(pick(['Oh, an audience! Officer, arrest THEM.', "I'd like to report neglect. Officer. OFFICER.", 'I was SINGING. Is that a crime now?'])), 1500);
+  setTimeout(() => { $('#copSays').textContent = pick(['Keep it down, Rosie.', 'This is your one warning, pup.', "I'll be calling her dad."]); }, 3500);
+  setTimeout(() => { cop.classList.remove('in'); siren.classList.remove('on'); if (!S.over) reportToDad('police'); }, 7000);
+}
+function neighborPop() {
+  if (S.over || S.modalOpen) return;
+  const n = document.createElement('div'); n.className = 'neighbor';
+  n.innerHTML = `${pick(NEIGHBORS)}<span>${pick(NEIGHBOR_LINES)}</span>`;
+  n.style.left = 30 + Math.random() * 30 + '%';
+  $('#neighbors').appendChild(n);
+  requestAnimationFrame(() => requestAnimationFrame(() => n.classList.add('up')));
+  setTimeout(() => { n.classList.remove('up'); setTimeout(() => n.remove(), 400); }, 3200);
+  S.points = Math.max(0, S.points - 5);
+}
+
+/* =====================================================================
+   Treat jar + bribes
+   ===================================================================== */
+const TREATS = {
+  cheese: { e: '🧀', name: 'Cheese cube', value: 1, mood: 6, line: ['A cheese cube. How quaint.', "Cheese. I'm listening."] },
+  bacon:  { e: '🥓', name: 'Bacon strip', value: 2, mood: 10, line: ["Bacon? Now we're negotiating.", 'Bacon. You may live.'] },
+  bully:  { e: '🦴', name: 'Bully stick', value: 3, mood: 15, line: ['A BULLY STICK. You understand power.', 'The good stuff. Finally, respect.'] },
+};
+const treatCount = () => S.treats ? Object.values(S.treats).reduce((a, b) => a + b, 0) : 0;
+const CALL_REASON = { tummy: 'Reason for call: "STARVATION."', happy: 'Reason for call: "Emotional neglect."', comfort: 'Reason for call: "Hostile working conditions."' };
+function treatButtons() { return Object.entries(TREATS).map(([k, t]) => `<button class="choice" data-treat="${k}" ${S.treats[k] ? '' : 'disabled'}>${t.e} ${t.name}<small>${S.treats[k]} left</small></button>`).join(''); }
+$('#btnTreats').onclick = () => {
+  if (blocked()) return;
+  openModal(`<h2>🦴 Treat Jar</h2><p class="small">Treats keep her happy… but they're also your <b>hush money</b> if she tries to call Dad. Refills every few minutes.</p>
+    <div class="choices">${treatButtons()}<button class="choice" data-treat="cancel">↩️ Save them</button></div>`);
+  document.querySelectorAll('[data-treat]').forEach(b => b.onclick = () => {
+    closeModal();
+    const k = b.dataset.treat;
+    if (k === 'cancel' || !S.treats[k]) return;
+    const t = TREATS[k];
+    S.treats[k]--; S.happy = clamp(S.happy + t.mood); S.tummy = clamp(S.tummy + 3);
+    flashHappy(); hearts(2, t.e); say(pick(t.line)); updateAll();
+  });
+};
+function startBribe(k) {
+  const price = Math.min(8, 2 + S.bribes + S.strikes + Math.floor(Math.random() * 2));
+  const RING = 8;
+  let paid = 0, left = RING, done = false;
+  openModal(`<h2>📱 Rosie is calling Dad!</h2><div class="phone">📱</div><p><b>${CALL_REASON[k]}</b></p>
+    <p class="small">Bribe her with treats before he picks up!</p>
+    <div class="bar" style="height:12px"><i id="ring" style="width:100%;background:#ff5a5a;transition:none"></i></div>
+    <p class="small" style="margin-top:8px">🤐 Silence bought</p>
+    <div class="bar" style="height:12px"><i id="silence" style="width:0;background:#5cc96b"></i></div>
+    <div class="choices" id="treatBtns">${treatButtons()}</div>
+    <p id="bribeMsg"><b>Rosie:</b> "${treatCount() ? 'Ring ring. Ring ring. *stares at you*' : 'Your treat jar is empty. I can smell weakness.'}"</p>
+    <button class="link" id="letCall">Let her call. I accept my fate.</button>`);
+  const talk = m => { $('#bribeMsg').innerHTML = `<b>Rosie:</b> "${m}"`; };
+  const iv = setInterval(() => { left -= 0.1; $('#ring').style.width = Math.max(0, (left / RING) * 100) + '%'; if (left <= 0) fail(); }, 100);
+  function bind() { document.querySelectorAll('#treatBtns [data-treat]').forEach(b => b.onclick = () => give(b.dataset.treat)); }
+  bind();
+  $('#letCall').onclick = fail;
+  function give(t) {
+    if (done || !S.treats[t]) return;
+    const tr = TREATS[t];
+    S.treats[t]--; paid += tr.value; S.tummy = clamp(S.tummy + 2);
+    $('#treatBtns').innerHTML = treatButtons(); bind();
+    $('#silence').style.width = Math.min(100, (paid / price) * 100) + '%';
+    if (paid >= price) return succeed(t);
+    const r = paid / price;
+    if (!treatCount()) talk("That's all you've got? Dad's phone is STILL ringing…");
+    else if (r < 0.34) talk(pick([`One ${tr.name.toLowerCase()}? For my SILENCE?`, "That's insulting. Keep going."]));
+    else if (r < 0.67) talk(pick(['Getting warmer. Phone is still ringing…', "Go on. I'm listening."]));
+    else talk(pick(['Almost. My paw is hovering over the button.', 'So close. One more and I forget his number.']));
+  }
+  function succeed(lastTreat) {
+    done = true; clearInterval(iv);
+    S[k] = Math.max(S[k], 35); S.bribes++;
+    $('#modalCard').innerHTML = `<h2>📵 Call Ended</h2><p style="font-size:44px;margin:4px">${TREATS[lastTreat].e}😌</p>
+      <p><b>Rosie:</b> "${pick(['…Hello? Dad? Wrong number. *click*', 'Dad? Oh, nothing. Butt-dialed. With my paw. Bye.', 'Hi Dad. Everything is fine. Totally fine. Bye.'])}"</p>
+      <p class="small">Her silence cost ${price} treat point${price > 1 ? 's' : ''}. Her price goes up every time.</p>
+      <button class="big" id="bribeOk">Phew 😅</button>`;
+    $('#bribeOk').onclick = () => { closeModal(); flashHappy(); say(pick(['Pleasure doing business with you.', 'We never speak of this.'])); updateAll(); };
+  }
+  function fail() { if (done) return; done = true; clearInterval(iv); closeModal(); reportToDad(k); }
+}
+
+/* =====================================================================
+   Game over
+   ===================================================================== */
+function headshotImg() { return `<img class="headshot" src="${PHOTOS.headshot}" alt="Rosie" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'mini-rosie rosie-wrap',innerHTML:rosieSVG()}))">`; }
+function endGame(html) {
+  S.over = true;
+  S.ev = null;
+  clearTimers(); clearSpeech(); renderEvent();
+  saveBest(); clearSave();
+  const b = best();
+  openModal(`${html}<p>👑 Final score: <b>${S.points}</b> &nbsp; 🏆 Best: <b>${b}</b>${S.points >= b && S.points > 0 ? ' — NEW BEST!' : ''}</p>
+    <button class="big" id="again">Try again</button>`);
+  $('#again').onclick = newGame;
+}
+function gameOver() {
+  endGame(`<h2>📱 Trip Cancelled!</h2>${headshotImg()}
+    <p>Dad has read Rosie's 14-paragraph complaint (with photos). They're cutting the trip short and driving home.</p><p><b>Rosie has won.</b> She always wins.</p>`);
+}
+
+/* =====================================================================
+   Title screen
+   ===================================================================== */
+(function showTitle() {
+  const saved = loadSave();
+  openModal(`<div class="marquee">${'<i></i>'.repeat(13)}</div>
+    <div class="hero">${headshotImg()}<div class="crown">👑</div></div>
+    <h2 class="title">Rosie's Diva Daycare</h2>
+    <p class="tag">Mom & Dad are on vacation. You're the help. Rosie has demands, opinions, and Dad's phone number.</p>
+    <ul class="rules">
+      <li><span>💬</span><div>Watch her bubble: when she wants something it shows the <b>icon</b> to tap and a <b>countdown clock</b>. Tap the icon right in her bubble or the matching button below.</div></li>
+      <li><span>🚪</span><div>Inside she just naps. She'll come to the glass when she wants out. Ignore her and she howls… then the neighbors… then the <b>police</b>.</div></li>
+      <li><span>🥣</span><div>Feeding: hold to pour kibble and stop in the green. Then spin the topping wheel. 🔥 slices mean you grill it (raw = tummy trouble). 🙄 = her boycott.</div></li>
+      <li><span>🤲</span><div>Tummy rubs: swipe the way she says. She changes her mind. Mess up and she texts Dad.</div></li>
+      <li><span>💩</span><div>Walks: tap every poop before it scrolls away. If she plops down, tap her to carry her. Miss a potty emergency = <b>automatic fail</b>.</div></li>
+      <li><span>🍂</span><div>Wind gusts bury the porch. Blow it clean, but don't blow Rosie.</div></li>
+      <li><span>📱</span><div>If a meter hits zero she calls Dad. Bribe her with 🦴 treats. ${CONFIG.MAX_REPORTS} reports and it's game over.</div></li>
+    </ul>
+    <p class="small">🏆 Best score: ${best()}</p>
+    ${saved ? `<button class="big" id="resume">Continue (👑 ${saved.points})</button><br><button class="link" id="start">Start over</button>` : '<button class="big" id="start">Start dog-sitting</button>'}`);
+  $('#modalCard').classList.add('title-card');
+  $('#start').onclick = newGame;
+  if (saved) $('#resume').onclick = () => resumeGame(saved);
+})();
+</script>
+</body>
+</html>
